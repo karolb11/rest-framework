@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.broniec.rest.demo.TimeService;
 import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ValidationConfig;
+import com.broniec.rest.famework.validator.Validator;
 import lombok.RequiredArgsConstructor;
 
 import static com.broniec.rest.famework.validator.ValidationRules.composedListValidator;
@@ -14,12 +15,12 @@ import static com.broniec.rest.famework.validator.ValidationRules.unicityConstra
 
 @Component
 @RequiredArgsConstructor
-class ValidationConfigFactory {
+class ValidatorFactory {
 
     private final AuthorFacade authorFacade;
     private final TimeService timeService;
 
-    ValidationConfig<AuthorDTO> buildAuthorDTOValidationConfig() {
+    public Validator<AuthorDTO> buildAuthorDTOValidator() {
         var descriptorValidator = buildLocalDescriptorDTOValidationConfig();
         var config = new ValidationConfig<AuthorDTO>();
         config.addRules(unicityConstraint(this::hasDuplicates));
@@ -42,9 +43,8 @@ class ValidationConfigFactory {
                 .mustBePast(timeService::currentDate)
         );
 
-        config.addRules(composedListValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor, descriptorValidator)
-                .mandatory());
-        return config;
+        config.addRules(composedListValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor, descriptorValidator));
+        return new Validator<>(config);
     }
 
     private boolean hasDuplicates(AuthorDTO AuthorDTO) {
@@ -54,7 +54,7 @@ class ValidationConfigFactory {
         ).isPresent();
     }
 
-    ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {
+    private ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {
         var config = new ValidationConfig<LocalDescriptorDTO>();
         config.addRules(stringValidation(LocalDescriptorDTO::localIdentifier, LocalDescriptorDTO.Fields.localIdentifier)
                 .mandatory()

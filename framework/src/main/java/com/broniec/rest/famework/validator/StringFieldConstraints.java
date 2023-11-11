@@ -31,7 +31,7 @@ public class StringFieldConstraints<T> implements ValidationRules<T> {
             resultBuilder.add(constraintViolationBuilder.minLength(minLength));
         }
         if (value.length() > maxLength) {
-            resultBuilder.add(constraintViolationBuilder.maxLength(minLength));
+            resultBuilder.add(constraintViolationBuilder.maxLength(maxLength));
         }
         return resultBuilder.build();
     }
