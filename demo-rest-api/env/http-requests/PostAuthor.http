@@ -4,7 +4,13 @@ Content-Type: application/json
 {
   "firstName": "Henryk",
   "lastName": "Sienkiewicz",
-  "dateOfBirth": "1990-10-05"
+  "dateOfBirth": "1990-10-05",
+  "localDescriptor": [
+    {
+      "sourceSystem": "open-library",
+      "localIdentifier": "auth1"
+    }
+  ]
 }
 
 ###

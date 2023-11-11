@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 import static java.util.Objects.isNull;
 
 @Component
-class AuthorRepositoryImpl implements AuthorRepository {
+class InMemoryAuthorRepository implements AuthorRepository {
 
     private final Map<AuthorId, Author> authors;
 
-    AuthorRepositoryImpl() {
+    InMemoryAuthorRepository() {
         this.authors = new ConcurrentHashMap<>();
     }
 
@@ -24,6 +24,11 @@ class AuthorRepositoryImpl implements AuthorRepository {
         if (isNull(author.getId())) {
             author.setId(new AuthorId(UUID.randomUUID()));
         }
+        author.getLocalDescriptor().forEach(ld -> {
+            if (isNull(ld.getId())) {
+                ld.setId(new LocalDescriptorId(UUID.randomUUID()));
+            }
+        });
         authors.put(author.getId(), author);
         return author;
     }

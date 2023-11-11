@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/v1/author/e97e3352-6513-4fb7-9e3e-4895932de4e4
+GET http://localhost:8080/api/v1/author/77ca1ac3-980b-4740-9cc2-2687c872581a
 Accept: application/json
 
 ###
