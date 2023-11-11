@@ -1,6 +1,7 @@
 package com.broniec.rest.famework.validator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -23,6 +24,18 @@ public interface ValidationRules<T> {
 
     static <T> LocalDateFieldConstraints<T> dateValidation(Function<T, LocalDate> getter, String fieldLabel) {
         return new LocalDateFieldConstraints<>(getter, fieldLabel);
+    }
+
+    static <T> ListFieldConstraints<T> listValidator(Function<T, List<?>> getter, String fieldLabel) {
+        return new ListFieldConstraints<>(getter, fieldLabel);
+    }
+
+    static <T, K> ComposedValidator<T, K> composedValidator(Function<T, K> valueGetter, String fieldLabel, ValidationConfig<K> config) {
+        return new ComposedValidator<>(valueGetter, fieldLabel, config);
+    }
+
+    static <T, K> ComposedListValidator<T, K> composedListValidator(Function<T, List<K>> valueGetter, String fieldLabel, ValidationConfig<K> config) {
+        return new ComposedListValidator<>(valueGetter, fieldLabel, config);
     }
 
 }

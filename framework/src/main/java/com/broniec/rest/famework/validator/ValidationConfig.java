@@ -15,7 +15,7 @@ public class ValidationConfig<T> {
         this.validationRules = new ArrayList<>();
     }
 
-    public ValidationConfig<T> addRules(ValidationRules rules) {
+    public ValidationConfig<T> addRules(ValidationRules<T> rules) {
         validationRules.add(rules);
         return this;
     }
