@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -23,6 +23,7 @@ public class Author {
     private LocalDate dateOfDeath;
     private Set<LocalDescriptor> localDescriptor;
 
+    @JsonCreator
     public Author() {
         localDescriptor = new HashSet<>();
     }

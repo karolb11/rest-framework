@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.author.domain.Author;
-import com.broniec.rest.famework.Objects;
 import lombok.RequiredArgsConstructor;
 
 import static com.broniec.rest.famework.Objects.optionalCollection;
