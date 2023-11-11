@@ -1,20 +1,14 @@
 package com.broniec.rest.demo.author.web.v1;
 
-import java.util.List;
-import java.util.function.Function;
-
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.TimeService;
 import com.broniec.rest.demo.author.domain.AuthorFacade;
-import com.broniec.rest.famework.validator.ComposedValidator;
 import com.broniec.rest.famework.validator.ValidationConfig;
 import lombok.RequiredArgsConstructor;
 
 import static com.broniec.rest.famework.validator.ValidationRules.composedListValidator;
-import static com.broniec.rest.famework.validator.ValidationRules.composedValidator;
 import static com.broniec.rest.famework.validator.ValidationRules.dateValidation;
-import static com.broniec.rest.famework.validator.ValidationRules.listValidator;
 import static com.broniec.rest.famework.validator.ValidationRules.stringValidation;
 import static com.broniec.rest.famework.validator.ValidationRules.unicityConstraint;
 
