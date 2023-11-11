@@ -9,11 +9,15 @@ import static java.util.Objects.isNull;
 
 public class ComposedListValidator<T, K> implements ValidationRules<T> {
 
+    private final ConstraintViolationBuilder constraintViolationBuilder;
+
     private final Function<T, List<K>> valueGetter;
     private final String fieldLabel;
     private final Validator<K> validator;
+    private boolean mandatory;
 
     ComposedListValidator(Function<T, List<K>> valueGetter, String fieldLabel, ValidationConfig<K> validationConfig) {
+        this.constraintViolationBuilder = new ConstraintViolationBuilder(fieldLabel);
         this.valueGetter = valueGetter;
         this.fieldLabel = fieldLabel;
         this.validator = new Validator<>(validationConfig);
@@ -26,7 +30,10 @@ public class ComposedListValidator<T, K> implements ValidationRules<T> {
         var value = valueGetter.apply(obj);
 
         if (isNull(value)) {
-            return Stream.empty();
+            if (mandatory) {
+                resultBuilder.add(constraintViolationBuilder.mandatoryField());
+            }
+            return resultBuilder.build();
         }
 
         IntStream.range(0, value.size()).forEach(i -> {
@@ -42,6 +49,11 @@ public class ComposedListValidator<T, K> implements ValidationRules<T> {
         });
 
         return resultBuilder.build();
+    }
+
+    public ComposedListValidator<T, K> mandatory() {
+        this.mandatory = true;
+        return this;
     }
 
 }

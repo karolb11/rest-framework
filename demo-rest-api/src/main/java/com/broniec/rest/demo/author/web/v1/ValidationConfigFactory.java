@@ -47,11 +47,9 @@ class ValidationConfigFactory {
         config.addRules(dateValidation(AuthorDTO::dateOfDeath, AuthorDTO.Fields.dateOfDeath)
                 .mustBePast(timeService::currentDate)
         );
-        config.addRules(listValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor)
-                .mandatory()
-        );
 
-        config.addRules(composedListValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor, descriptorValidator));
+        config.addRules(composedListValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor, descriptorValidator)
+                .mandatory());
         return config;
     }
 
