@@ -39,7 +39,21 @@ class AuthorDTOValidationTest extends UnitTest {
         var result = validator.validate(author);
         //then
         assertThat(result).containsExactly(
-                new ConstraintViolation("firstName", "Mandatory field"),
+                new ConstraintViolation("firstName", "Mandatory field")
+        );
+    }
+
+    @Test
+    void shouldReturnViolationForTooShortFirstName() {
+        //given
+        var validator = validatorFactory.buildAuthorDTOValidator();
+        var author = validAuthorDTOBuilder()
+                .firstName("a")
+                .build();
+        //when
+        var result = validator.validate(author);
+        //then
+        assertThat(result).containsExactly(
                 new ConstraintViolation("firstName", "Min length is 3")
         );
     }

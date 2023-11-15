@@ -1,53 +1,40 @@
 package com.broniec.rest.famework.validator;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang3.StringUtils;
-
 public class StringFieldConstraints<T> implements ValidationRules<T> {
 
-    private final ConstraintViolationBuilder constraintViolationBuilder;
     private final Function<T, String> getter;
-    private boolean mandatory;
-    private int minLength;
-    private int maxLength;
+    private final String fieldLabel;
+    private final Collection<Constraint<String>> constraints;
 
     StringFieldConstraints(Function<T, String> getter, String fieldLabel) {
-        this.constraintViolationBuilder = new ConstraintViolationBuilder(fieldLabel);
         this.getter = getter;
-        this.maxLength = Integer.MAX_VALUE;
+        this.fieldLabel = fieldLabel;
+        this.constraints = new ArrayList<>();
     }
 
     @Override
     public Stream<ConstraintViolation> execute(T obj) {
-        var resultBuilder = Stream.<ConstraintViolation>builder();
-        var value = Optional.ofNullable(getter.apply(obj)).orElse("");
-        if (mandatory && StringUtils.isBlank(value)) {
-            resultBuilder.add(constraintViolationBuilder.mandatoryField());
-        }
-        if (value.length() < minLength) {
-            resultBuilder.add(constraintViolationBuilder.minLength(minLength));
-        }
-        if (value.length() > maxLength) {
-            resultBuilder.add(constraintViolationBuilder.maxLength(maxLength));
-        }
-        return resultBuilder.build();
+        var value = getter.apply(obj);
+        return constraints.stream().flatMap(constraint -> constraint.check(value, fieldLabel));
     }
 
     public StringFieldConstraints<T> mandatory() {
-        mandatory = true;
+        constraints.add(new MandatoryStringConstraint(fieldLabel));
         return this;
     }
 
     public StringFieldConstraints<T> minLength(int minLength) {
-        this.minLength = minLength;
+        constraints.add(new MinStringLengthConstraint(fieldLabel, minLength));
         return this;
     }
 
     public StringFieldConstraints<T> maxLength(int maxLength) {
-        this.maxLength = maxLength;
+        constraints.add(new MaxStringLengthConstraint(fieldLabel, maxLength));
         return this;
     }
 
