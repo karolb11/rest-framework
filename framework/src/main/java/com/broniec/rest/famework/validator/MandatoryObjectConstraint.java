@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 
-class MandatoryObjectConstraint<T> implements Constraint<T> {
+class MandatoryObjectConstraint<O, F> implements Constraint<O, F> {
 
     private final ConstraintViolationBuilder constraintViolationBuilder;
 
@@ -13,7 +13,7 @@ class MandatoryObjectConstraint<T> implements Constraint<T> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(T value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, F value, String fieldLabel) {
         if (isNull(value)) {
             return Stream.of(constraintViolationBuilder.mandatoryField());
         } else {

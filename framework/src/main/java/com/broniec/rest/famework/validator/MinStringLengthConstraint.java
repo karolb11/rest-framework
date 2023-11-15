@@ -3,7 +3,7 @@ package com.broniec.rest.famework.validator;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-class MinStringLengthConstraint implements Constraint<String> {
+class MinStringLengthConstraint<O> implements Constraint<O, String> {
 
     private final ConstraintViolationBuilder constraintViolationBuilder;
     private final int size;
@@ -14,7 +14,7 @@ class MinStringLengthConstraint implements Constraint<String> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(String value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, String value, String fieldLabel) {
         if (Objects.isNull(value)) {
             return Stream.empty();
         }

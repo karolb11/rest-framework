@@ -7,17 +7,17 @@ import java.util.stream.Stream;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-class ComposedListConstraint<T> implements Constraint<List<T>> {
+class ComposedListConstraint<O, F> implements Constraint<O, List<F>> {
 
-    private final Validator<T> validator;
+    private final Validator<F> validator;
 
-    ComposedListConstraint(String fieldLabel, Validator<T> validator) {
+    ComposedListConstraint(String fieldLabel, Validator<F> validator) {
         this.validator = validator;
     }
 
 
     @Override
-    public Stream<ConstraintViolation> check(List<T> value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, List<F> value, String fieldLabel) {
         var resultBuilder = Stream.<ConstraintViolation>builder();
 
         if (nonNull(value)) {

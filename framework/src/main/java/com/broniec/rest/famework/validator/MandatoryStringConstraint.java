@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
-class MandatoryStringConstraint implements Constraint<String> {
+class MandatoryStringConstraint<O> implements Constraint<O, String> {
 
     private final ConstraintViolationBuilder constraintViolationBuilder;
 
@@ -13,7 +13,7 @@ class MandatoryStringConstraint implements Constraint<String> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(String value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, String value, String fieldLabel) {
         if (StringUtils.isBlank(value)) {
             return Stream.of(constraintViolationBuilder.mandatoryField());
         } else {

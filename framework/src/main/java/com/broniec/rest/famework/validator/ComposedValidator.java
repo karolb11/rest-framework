@@ -5,13 +5,13 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 
-public class ComposedValidator<T, K> implements ValidationRules<T> {
+public class ComposedValidator<O, F> implements ValidationRules<O> {
 
-    private final Function<T, K> valueGetter;
+    private final Function<O, F> valueGetter;
     private final String fieldLabel;
-    private final Validator<K> validator;
+    private final Validator<F> validator;
 
-    ComposedValidator(Function<T, K> valueGetter, String fieldLabel, ValidationConfig<K> validationConfig) {
+    ComposedValidator(Function<O, F> valueGetter, String fieldLabel, ValidationConfig<F> validationConfig) {
         this.valueGetter = valueGetter;
         this.fieldLabel = fieldLabel;
         this.validator = new Validator<>(validationConfig);
@@ -19,7 +19,7 @@ public class ComposedValidator<T, K> implements ValidationRules<T> {
 
 
     @Override
-    public Stream<ConstraintViolation> execute(T obj) {
+    public Stream<ConstraintViolation> execute(O obj) {
         var value = valueGetter.apply(obj);
 
         if (isNull(value)) {

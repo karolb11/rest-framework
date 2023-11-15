@@ -6,29 +6,29 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class ComposedListValidator<T, K> implements ValidationRules<T> {
+public class ComposedListValidator<O, F> implements ValidationRules<O> {
 
-    private final Function<T, List<K>> valueGetter;
+    private final Function<O, List<F>> valueGetter;
     private final String fieldLabel;
-    private final Validator<K> validator;
-    private final Collection<Constraint<List<K>>> constraints;
+    private final Validator<F> validator;
+    private final Collection<Constraint<O, List<F>>> constraints;
 
-    ComposedListValidator(Function<T, List<K>> valueGetter, String fieldLabel, ValidationConfig<K> validationConfig) {
+    ComposedListValidator(Function<O, List<F>> valueGetter, String fieldLabel, ValidationConfig<F> validationConfig) {
         this.valueGetter = valueGetter;
         this.fieldLabel = fieldLabel;
         this.validator = new Validator<>(validationConfig);
         this.constraints = new ArrayList<>();
-        constraints.add(new ComposedListConstraint<K>(fieldLabel, validator));
+        constraints.add(new ComposedListConstraint<>(fieldLabel, validator));
     }
 
 
     @Override
-    public Stream<ConstraintViolation> execute(T obj) {
+    public Stream<ConstraintViolation> execute(O obj) {
         var value = valueGetter.apply(obj);
-        return constraints.stream().flatMap(constraint -> constraint.check(value, fieldLabel));
+        return constraints.stream().flatMap(constraint -> constraint.check(obj, value, fieldLabel));
     }
 
-    public ComposedListValidator<T, K> mandatory() {
+    public ComposedListValidator<O, F> mandatory() {
         constraints.add(new MandatoryObjectConstraint<>(fieldLabel));
         return this;
     }

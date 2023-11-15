@@ -6,10 +6,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public interface ValidationRules<T> {
+public interface ValidationRules<O> {
 
     //todo: add default impl
-    Stream<ConstraintViolation> execute(T obj);
+    Stream<ConstraintViolation> execute(O obj);
 
     static <T> StringFieldConstraints<T> stringValidation(Function<T, String> getter, String fieldLabel) {
         return new StringFieldConstraints<>(getter, fieldLabel);

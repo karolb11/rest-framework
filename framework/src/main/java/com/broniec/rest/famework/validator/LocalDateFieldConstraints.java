@@ -1,73 +1,47 @@
 package com.broniec.rest.famework.validator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
-public class LocalDateFieldConstraints<T> implements ValidationRules<T> {
+public class LocalDateFieldConstraints<O> implements ValidationRules<O> {
 
-    private final ConstraintViolationBuilder constraintViolationBuilder;
+    private final Function<O, LocalDate> valueGetter;
+    private final String fieldLabel;
+    private final Collection<Constraint<O, LocalDate>> constraints;
 
-    private final Function<T, LocalDate> valueGetter;
-    private Function<T, LocalDate> beforeGetter;
-    private Supplier<LocalDate> currentDateSupplier;
-    private boolean mustBePast;
-
-    private boolean mandatory;
-
-    public LocalDateFieldConstraints(Function<T, LocalDate> valueGetter, String fieldLabel) {
-        this.constraintViolationBuilder = new ConstraintViolationBuilder(fieldLabel);
+    public LocalDateFieldConstraints(Function<O, LocalDate> valueGetter, String fieldLabel) {
         this.valueGetter = valueGetter;
+        this.fieldLabel = fieldLabel;
+        this.constraints = new ArrayList<>();
     }
 
     @Override
-    public Stream<ConstraintViolation> execute(T obj) {
-        var resultBuilder = Stream.<ConstraintViolation>builder();
-
+    public Stream<ConstraintViolation> execute(O obj) {
         var value = valueGetter.apply(obj);
-
-
-        if (isNull(value)) {
-            if (mandatory) {
-                resultBuilder.add(constraintViolationBuilder.mandatoryField());
-            }
-            return resultBuilder.build();
-        }
-
-        if (nonNull(beforeGetter)) {
-            var dateThatMustBeAfter = beforeGetter.apply(obj);
-            if (nonNull(dateThatMustBeAfter) && value.isAfter(dateThatMustBeAfter)) {
-                resultBuilder.add(constraintViolationBuilder.dateMustBeBefore(dateThatMustBeAfter));
-            }
-        }
-
-        if (mustBePast) {
-            var currentDate = currentDateSupplier.get();
-            if (value.isAfter(currentDate)) {
-                resultBuilder.add(constraintViolationBuilder.dateMustBePast());
-            }
-        }
-
-        return resultBuilder.build();
+        return constraints.stream().flatMap(constraint -> constraint.check(obj, value, fieldLabel));
     }
 
-    public LocalDateFieldConstraints<T> mandatory() {
-        this.mandatory = true;
+    public LocalDateFieldConstraints<O> mandatory() {
+        constraints.add(new MandatoryObjectConstraint<>(fieldLabel));
         return this;
     }
 
-    public LocalDateFieldConstraints<T> before(Function<T, LocalDate> beforeGetter) {
-        this.beforeGetter = beforeGetter;
+    public LocalDateFieldConstraints<O> before(Function<O, LocalDate> beforeGetter) {
+        if (isNull(beforeGetter)) {
+            return this;
+        }
+        constraints.add(new DateBeforeConstraint<>(fieldLabel, beforeGetter));
         return this;
     }
 
-    public LocalDateFieldConstraints<T> mustBePast(Supplier<LocalDate> currentDateSupplier) {
-        this.currentDateSupplier = currentDateSupplier;
-        mustBePast = true;
+    public LocalDateFieldConstraints<O> mustBePast(Supplier<LocalDate> currentDateSupplier) {
+        constraints.add(new PastDateConstraint<>(fieldLabel, currentDateSupplier));
         return this;
     }
 

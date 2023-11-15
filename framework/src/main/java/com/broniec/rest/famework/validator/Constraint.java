@@ -2,8 +2,8 @@ package com.broniec.rest.famework.validator;
 
 import java.util.stream.Stream;
 
-interface Constraint<T> {
+interface Constraint<O, F> {
 
-    Stream<ConstraintViolation> check(T value, String fieldLabel);
+    Stream<ConstraintViolation> check(O validatedObj, F value, String fieldLabel);
 
 }
