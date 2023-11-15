@@ -7,19 +7,19 @@ import java.util.stream.Stream;
 
 public class StringFieldConstraints<T> implements ValidationRules<T> {
 
-    private final Function<T, String> getter;
+    private final Function<T, String> valueGetter;
     private final String fieldLabel;
     private final Collection<Constraint<String>> constraints;
 
-    StringFieldConstraints(Function<T, String> getter, String fieldLabel) {
-        this.getter = getter;
+    StringFieldConstraints(Function<T, String> valueGetter, String fieldLabel) {
+        this.valueGetter = valueGetter;
         this.fieldLabel = fieldLabel;
         this.constraints = new ArrayList<>();
     }
 
     @Override
     public Stream<ConstraintViolation> execute(T obj) {
-        var value = getter.apply(obj);
+        var value = valueGetter.apply(obj);
         return constraints.stream().flatMap(constraint -> constraint.check(value, fieldLabel));
     }
 

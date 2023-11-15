@@ -1,41 +1,31 @@
 package com.broniec.rest.famework.validator;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static java.util.Objects.isNull;
-
 public class ListFieldConstraints<T> implements ValidationRules<T> {
 
-    private final ConstraintViolationBuilder constraintViolationBuilder;
-
     private final Function<T, List<?>> valueGetter;
-
-    private boolean mandatory;
+    private final String fieldLabel;
+    private final Collection<Constraint<List<?>>> constraints;
 
     public ListFieldConstraints(Function<T, List<?>> valueGetter, String fieldLabel) {
-        this.constraintViolationBuilder = new ConstraintViolationBuilder(fieldLabel);
         this.valueGetter = valueGetter;
+        this.fieldLabel = fieldLabel;
+        this.constraints = new ArrayList<>();
     }
 
     @Override
     public Stream<ConstraintViolation> execute(T obj) {
-        var resultBuilder = Stream.<ConstraintViolation>builder();
         var value = valueGetter.apply(obj);
-
-        if (isNull(value)) {
-            if (mandatory) {
-                resultBuilder.add(constraintViolationBuilder.mandatoryField());
-            }
-            return resultBuilder.build();
-        }
-
-        return resultBuilder.build();
+        return constraints.stream().flatMap(constraint -> constraint.check(value, fieldLabel));
     }
 
     public ListFieldConstraints<T> mandatory() {
-        mandatory = true;
+        constraints.add(new MandatoryObjectConstraint<>(fieldLabel));
         return this;
     }
 
