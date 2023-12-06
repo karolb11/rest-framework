@@ -1,17 +1,17 @@
-PUT http://localhost:8080/api/v1/author/b1f12b76-c4a4-4fa5-92b1-714023a2d711
+PUT http://localhost:8080/api/v1/author/1
 Content-Type: application/json
 
 {
-  "id": "b1f12b76-c4a4-4fa5-92b1-714023a2d711",
+  "id": "1",
   "firstName": "Henryk2",
   "lastName": "Sienkiewicz",
   "dateOfBirth": "1990-10-05",
   "dateOfDeath": null,
   "localDescriptor": [
     {
-      "id": "de5b393d-e746-4db4-94cf-c65360566904",
+      "id": "1",
       "sourceSystem": "open-library",
-      "localIdentifier": "auth1"
+      "localIdentifier": "auth3"
     }
   ]
 }

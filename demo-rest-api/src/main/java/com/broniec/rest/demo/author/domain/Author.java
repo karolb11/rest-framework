@@ -14,12 +14,14 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @jakarta.persistence.Entity
 @Setter
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class Author implements Entity<Author, Long> {
 
@@ -33,10 +35,12 @@ public class Author implements Entity<Author, Long> {
     private LocalDate dateOfDeath;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<LocalDescriptor> localDescriptor;
+    @Builder.Default
+    private Set<LocalDescriptor> localDescriptor = new HashSet<>();
 
-    public Author() {
-        localDescriptor = new HashSet<>();
+    public void addLocalDescriptor(LocalDescriptor localDescriptor) {
+        this.localDescriptor.add(localDescriptor);
+        localDescriptor.setAuthor(this);
     }
 
     public void update(Author reference) {

@@ -1,7 +1,5 @@
 package com.broniec.rest.demo.author.web.v1;
 
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.author.domain.Author;
@@ -17,17 +15,17 @@ class AuthorMapper {
     private final LocalDescriptorMapper localDescriptorMapper;
 
     public Author toAuthor(AuthorDTO authorDTO) {
-        var localDescriptor = optionalCollection(authorDTO::localDescriptor).stream()
-                .map(localDescriptorMapper::toLocalDescriptor)
-                .collect(Collectors.toSet());
-        return Author.builder()
+        var author = Author.builder()
                 .id(authorDTO.id())
                 .firstName(authorDTO.firstName())
                 .lastName(authorDTO.lastName())
                 .dateOfBirth(authorDTO.dateOfBirth())
                 .dateOfDeath(authorDTO.dateOfDeath())
-                .localDescriptor(localDescriptor)
                 .build();
+        optionalCollection(authorDTO::localDescriptor).stream()
+                .map(localDescriptorMapper::toLocalDescriptor)
+                .forEach(author::addLocalDescriptor);
+        return author;
     }
 
     public AuthorDTO toAuthorDTO(Author author) {
