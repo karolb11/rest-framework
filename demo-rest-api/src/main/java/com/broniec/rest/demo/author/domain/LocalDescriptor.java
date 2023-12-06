@@ -1,5 +1,6 @@
 package com.broniec.rest.demo.author.domain;
 
+import com.broniec.rest.famework.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,11 +12,14 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocalDescriptor {
+public class LocalDescriptor implements Entity<LocalDescriptor> {
 
     private LocalDescriptorId id;
     private String sourceSystem;
     private String localIdentifier;
 
+    @Override
+    public void update(LocalDescriptor reference) {
 
+    }
 }
