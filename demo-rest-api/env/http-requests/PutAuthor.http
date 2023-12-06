@@ -3,15 +3,15 @@ Content-Type: application/json
 
 {
   "id": "1",
-  "firstName": "Henryk2",
-  "lastName": "Sienkiewicz",
+  "firstName": "Henryk3",
+  "lastName": "Sienkiewicz3",
   "dateOfBirth": "1990-10-05",
   "dateOfDeath": null,
   "localDescriptor": [
     {
       "id": "1",
       "sourceSystem": "open-library",
-      "localIdentifier": "auth3"
+      "localIdentifier": "auth110"
     }
   ]
 }

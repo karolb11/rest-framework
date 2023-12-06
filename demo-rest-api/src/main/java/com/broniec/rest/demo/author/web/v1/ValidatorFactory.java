@@ -3,6 +3,7 @@ package com.broniec.rest.demo.author.web.v1;
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.TimeService;
+import com.broniec.rest.demo.author.domain.Author;
 import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ValidationConfig;
 import com.broniec.rest.famework.validator.Validator;
@@ -47,11 +48,13 @@ class ValidatorFactory {
         return new Validator<>(config);
     }
 
-    private boolean hasDuplicates(AuthorDTO AuthorDTO) {
+    private boolean hasDuplicates(AuthorDTO authorDTO) {
+        //todo: authorId validation
         return authorFacade.findAuthor(
-                AuthorDTO.firstName(),
-                AuthorDTO.lastName()
-        ).isPresent();
+                        authorDTO.firstName(),
+                        authorDTO.lastName()
+                ).map(Author::getId).filter(id -> !id.equals(authorDTO.id()))
+                .isPresent();
     }
 
     private ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {

@@ -4,12 +4,17 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import org.assertj.core.util.Sets;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.broniec.rest.demo.UnitTest;
+import jakarta.transaction.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+
 
 class AuthorFacadeTest extends UnitTest {
 
@@ -17,6 +22,7 @@ class AuthorFacadeTest extends UnitTest {
     private AuthorFacade authorFacade;
 
     @Test
+    @Transactional
     public void shouldSaveAuthor() {
         //given
         var authorToBeRegistered = Author.builder()
@@ -34,10 +40,11 @@ class AuthorFacadeTest extends UnitTest {
         var savedAuthor = authorFacade.saveAuthor(authorToBeRegistered);
         //then
         var foundAuthor = authorFacade.findAuthor(savedAuthor.getId());
-        assertThat(foundAuthor).contains(savedAuthor);
+        assertThat(foundAuthor, Matchers.is(foundAuthor));
     }
 
     @Test
+    @Transactional
     public void shouldUpdateAuthor() {
         //given
         var authorToBeRegistered = Author.builder()
@@ -51,8 +58,7 @@ class AuthorFacadeTest extends UnitTest {
                                 .build()
                 ))
                 .build();
-        var savedAuthor = authorFacade.saveAuthor(authorToBeRegistered);
-        //given
+        var savedAuthorId = authorFacade.saveAuthor(authorToBeRegistered).getId();
         var updateReference = Author.builder()
                 .firstName("Henryk2")
                 .lastName("Sienkiewicz2")
@@ -65,12 +71,17 @@ class AuthorFacadeTest extends UnitTest {
                 ))
                 .build();
         //when
-        authorFacade.updateAuthor(savedAuthor.getId(), updateReference);
+        authorFacade.updateAuthor(savedAuthorId, updateReference);
         //then
-        assertThat(savedAuthor.getFirstName()).isEqualTo(updateReference.getFirstName());
-        assertThat(savedAuthor.getLastName()).isEqualTo(updateReference.getLastName());
-        assertThat(savedAuthor.getDateOfBirth()).isEqualTo(updateReference.getDateOfBirth());
-        assertThat(savedAuthor.getLocalDescriptor()).hasSize(1);
+        var updatedAuthor = authorFacade.findAuthor(savedAuthorId).get();
+        assertThat(updatedAuthor.getFirstName(), Matchers.equalTo(updateReference.getFirstName()));
+        assertThat(updatedAuthor.getLastName(), Matchers.equalTo(updateReference.getLastName()));
+        assertThat(updatedAuthor.getDateOfBirth(), Matchers.equalTo(updateReference.getDateOfBirth()));
+        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasSize(1));
+        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasItem(Matchers.allOf(
+                hasProperty("sourceSystem", is("open-library")),
+                hasProperty("localIdentifier", is("auth2"))
+        )));
     }
 
 }

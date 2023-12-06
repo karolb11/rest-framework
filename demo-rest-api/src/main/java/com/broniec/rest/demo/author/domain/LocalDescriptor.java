@@ -33,6 +33,7 @@ public class LocalDescriptor implements Entity<LocalDescriptor, Long> {
 
     @Override
     public void update(LocalDescriptor reference) {
-
+        this.sourceSystem = reference.sourceSystem;
+        this.localIdentifier = reference.localIdentifier;
     }
 }
