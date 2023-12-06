@@ -6,26 +6,35 @@ import java.util.Set;
 
 import com.broniec.rest.famework.Entity;
 import com.broniec.rest.famework.UpdateHelper;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+@jakarta.persistence.Entity
+@Setter
 @Getter
 @Builder
 @AllArgsConstructor
-public class Author implements Entity<Author> {
+public class Author implements Entity<Author, Long> {
 
-    @Setter
-    private AuthorId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
     private LocalDate dateOfDeath;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LocalDescriptor> localDescriptor;
 
-    @JsonCreator
     public Author() {
         localDescriptor = new HashSet<>();
     }

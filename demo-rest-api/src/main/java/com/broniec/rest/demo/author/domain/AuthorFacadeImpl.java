@@ -20,12 +20,12 @@ class AuthorFacadeImpl implements AuthorFacade {
     }
 
     @Override
-    public Author updateAuthor(AuthorId authorId, Author author) {
+    public Author updateAuthor(Long authorId, Author author) {
         return authorUpdateService.updateAuthor(authorId, author);
     }
 
     @Override
-    public Optional<Author> findAuthor(AuthorId authorId) {
+    public Optional<Author> findAuthor(Long authorId) {
         return authorRepository.findById(authorId);
     }
 

@@ -1,7 +1,5 @@
 package com.broniec.rest.demo.author.web.v1;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +29,7 @@ class AuthorController {
     }
 
     @PutMapping("/{authorId}")
-    public ResponseEntity<?> updateAuthor(@PathVariable UUID authorId, @RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<?> updateAuthor(@PathVariable Long authorId, @RequestBody AuthorDTO authorDTO) {
         var response = authorCommandHandler.updateAuthor(authorId, authorDTO);
         return response.fold(
                 res -> ResponseEntity.badRequest().body(res),
@@ -40,7 +38,7 @@ class AuthorController {
     }
 
     @GetMapping("/{authorId}")
-    public ResponseEntity<?> getAuthorById(@PathVariable UUID authorId) {
+    public ResponseEntity<?> getAuthorById(@PathVariable Long authorId) {
         return ResponseEntity.of(authorQueryHandler.queryAuthorById(authorId));
     }
 

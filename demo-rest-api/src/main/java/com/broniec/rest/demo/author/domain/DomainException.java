@@ -6,8 +6,8 @@ class DomainException extends RuntimeException {
         super(message);
     }
 
-    public static DomainException authorNotFound(AuthorId authorId) {
-        return new DomainException("Author not found by id %s".formatted(authorId.getValue()));
+    public static DomainException authorNotFound(Long authorId) {
+        return new DomainException("Author not found by id %s".formatted(authorId));
     }
 
 }

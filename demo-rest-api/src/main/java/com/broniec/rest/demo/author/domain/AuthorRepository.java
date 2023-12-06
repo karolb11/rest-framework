@@ -2,11 +2,9 @@ package com.broniec.rest.demo.author.domain;
 
 import java.util.Optional;
 
-interface AuthorRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    Author save(Author author);
-
-    Optional<Author> findById(AuthorId authorId);
+interface AuthorRepository extends JpaRepository<Author, Long> {
 
     Optional<Author> findByFirstNameAndLastName(String firstName, String lastName);
 

@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:35432/demo-rest-api
+    driver-class-name: org.postgresql.Driver
+    username: demo-rest-api
+    password: secret-pass
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration

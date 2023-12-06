@@ -10,7 +10,7 @@ class AuthorUpdateService {
 
     private final AuthorRepository authorRepository;
 
-    public Author updateAuthor(AuthorId authorId, Author newAuthor) {
+    public Author updateAuthor(Long authorId, Author newAuthor) {
         var authorToBeUpdated = authorRepository.findById(authorId)
                 .orElseThrow(() -> DomainException.authorNotFound(authorId));
         authorToBeUpdated.update(newAuthor);
