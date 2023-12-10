@@ -14,7 +14,7 @@ class MaxStringLengthConstraint<O> implements Constraint<O, String> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(O validatedObj, String value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, String value, String fieldLabel) {
         if (Objects.isNull(value)) {
             return Stream.empty();
         }

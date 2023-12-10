@@ -17,7 +17,7 @@ class PastDateConstraint<O> implements Constraint<O, LocalDate> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(O validatedObj, LocalDate value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, LocalDate value, String fieldLabel) {
         if (isNull(value)) {
             return Stream.empty();
         }

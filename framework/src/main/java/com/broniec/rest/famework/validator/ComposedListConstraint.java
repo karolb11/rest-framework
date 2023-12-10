@@ -17,12 +17,12 @@ class ComposedListConstraint<O, F> implements Constraint<O, List<F>> {
 
 
     @Override
-    public Stream<ConstraintViolation> check(O validatedObj, List<F> value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, List<F> value, String fieldLabel) {
         var resultBuilder = Stream.<ConstraintViolation>builder();
 
         if (nonNull(value)) {
             IntStream.range(0, value.size()).forEach(i -> {
-                validator.validate(value.get(i)).stream().map(violation -> {
+                validator.validate(value.get(i), context).stream().map(violation -> {
                     String field;
                     if (isNull(violation.field())) {
                         field = fieldLabel + "[%s]".formatted(i);

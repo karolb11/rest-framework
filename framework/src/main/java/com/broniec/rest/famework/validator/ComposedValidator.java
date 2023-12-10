@@ -19,14 +19,14 @@ public class ComposedValidator<O, F> implements ValidationRules<O> {
 
 
     @Override
-    public Stream<ConstraintViolation> execute(O obj) {
+    public Stream<ConstraintViolation> execute(O obj, ValidationContext context) {
         var value = valueGetter.apply(obj);
 
         if (isNull(value)) {
             return Stream.empty();
         }
 
-        return validator.validate(value).stream().map(violation -> {
+        return validator.validate(value, context).stream().map(violation -> {
             var field = isNull(violation.field()) ? fieldLabel : fieldLabel + "." + violation.field();
             return new ConstraintViolation(field, violation.message());
         });

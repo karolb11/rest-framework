@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ConstraintViolation;
+import com.broniec.rest.famework.validator.OperationType;
+import com.broniec.rest.famework.validator.ValidationContext;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,10 @@ class AuthorCommandHandler {
 
     public Either<Collection<ConstraintViolation>, AuthorDTO> registerAuthor(AuthorDTO authorDTO) {
         var validator = validatorFactory.buildAuthorDTOValidator();
-        var constraintViolations = validator.validate(authorDTO);
+        var validationContext = ValidationContext.builder()
+                .operationType(OperationType.CREATE)
+                .build();
+        var constraintViolations = validator.validate(authorDTO, validationContext);
         if (constraintViolations.isEmpty()) {
             var author = authorMapper.toAuthor(authorDTO);
             author = authorFacade.saveAuthor(author);
@@ -35,7 +40,11 @@ class AuthorCommandHandler {
 
     public Either<Collection<ConstraintViolation>, AuthorDTO> updateAuthor(Long authorId, AuthorDTO authorDTO) {
         var validator = validatorFactory.buildAuthorDTOValidator();
-        var constraintViolations = validator.validate(authorDTO);
+        var validationContext = ValidationContext.builder()
+                .operationType(OperationType.UPDATE)
+                .updatedResourceId(authorId)
+                .build();
+        var constraintViolations = validator.validate(authorDTO, validationContext);
         if (constraintViolations.isEmpty()) {
             var author = authorMapper.toAuthor(authorDTO);
             author = authorFacade.updateAuthor(authorId, author);

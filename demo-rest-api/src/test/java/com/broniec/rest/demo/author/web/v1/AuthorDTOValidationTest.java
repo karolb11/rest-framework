@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.broniec.rest.demo.UnitTest;
 import com.broniec.rest.famework.validator.ConstraintViolation;
+import com.broniec.rest.famework.validator.OperationType;
+import com.broniec.rest.famework.validator.ValidationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +25,7 @@ class AuthorDTOValidationTest extends UnitTest {
         var validator = validatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder().build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).isEmpty();
     }
@@ -36,7 +38,7 @@ class AuthorDTOValidationTest extends UnitTest {
                 .firstName(null)
                 .build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).containsExactly(
                 new ConstraintViolation("firstName", "Mandatory field")
@@ -51,7 +53,7 @@ class AuthorDTOValidationTest extends UnitTest {
                 .firstName("a")
                 .build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).containsExactly(
                 new ConstraintViolation("firstName", "Min length is 3")
@@ -66,7 +68,7 @@ class AuthorDTOValidationTest extends UnitTest {
                 .firstName(RandomStringUtils.random(500))
                 .build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).containsExactly(
                 new ConstraintViolation("firstName", "Max length is 100")
@@ -81,7 +83,7 @@ class AuthorDTOValidationTest extends UnitTest {
                 .dateOfBirth(null)
                 .build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).containsExactly(
                 new ConstraintViolation("dateOfBirth", "Mandatory field")
@@ -97,7 +99,7 @@ class AuthorDTOValidationTest extends UnitTest {
                 .dateOfDeath(null)
                 .build();
         //when
-        var result = validator.validate(author);
+        var result = validator.validate(author, createValidationContext());
         //then
         assertThat(result).containsExactly(
                 new ConstraintViolation("dateOfBirth", "Date must be past")
@@ -110,6 +112,12 @@ class AuthorDTOValidationTest extends UnitTest {
                 .lastName("Sienkiewicz")
                 .dateOfBirth(LocalDate.of(1846, 5, 5))
                 .dateOfDeath(LocalDate.of(1916, 11, 15));
+    }
+    
+    private ValidationContext createValidationContext() {
+        return ValidationContext.builder()
+                .operationType(OperationType.CREATE)
+                .build();
     }
 
 }

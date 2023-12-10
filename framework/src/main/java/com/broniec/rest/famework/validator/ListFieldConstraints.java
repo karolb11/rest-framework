@@ -19,9 +19,9 @@ public class ListFieldConstraints<O> implements ValidationRules<O> {
     }
 
     @Override
-    public Stream<ConstraintViolation> execute(O obj) {
+    public Stream<ConstraintViolation> execute(O obj, ValidationContext context) {
         var value = valueGetter.apply(obj);
-        return constraints.stream().flatMap(constraint -> constraint.check(obj, value, fieldLabel));
+        return constraints.stream().flatMap(constraint -> constraint.check(obj, context, value, fieldLabel));
     }
 
     public ListFieldConstraints<O> mandatory() {

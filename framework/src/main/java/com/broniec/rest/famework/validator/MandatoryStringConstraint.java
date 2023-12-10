@@ -13,7 +13,7 @@ class MandatoryStringConstraint<O> implements Constraint<O, String> {
     }
 
     @Override
-    public Stream<ConstraintViolation> check(O validatedObj, String value, String fieldLabel) {
+    public Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, String value, String fieldLabel) {
         if (StringUtils.isBlank(value)) {
             return Stream.of(constraintViolationBuilder.mandatoryField());
         } else {

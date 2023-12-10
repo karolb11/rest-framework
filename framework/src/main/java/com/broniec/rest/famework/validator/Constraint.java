@@ -4,6 +4,6 @@ import java.util.stream.Stream;
 
 interface Constraint<O, F> {
 
-    Stream<ConstraintViolation> check(O validatedObj, F value, String fieldLabel);
+    Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, F value, String fieldLabel);
 
 }

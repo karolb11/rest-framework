@@ -11,9 +11,9 @@ public class Validator<T> {
         this.config = config;
     }
 
-    public Collection<ConstraintViolation> validate(T obj) {
+    public Collection<ConstraintViolation> validate(T obj, ValidationContext context) {
         return config.getValidationRules().stream()
-                .flatMap(rules -> rules.execute(obj))
+                .flatMap(rules -> rules.execute(obj, context))
                 .toList();
     }
 

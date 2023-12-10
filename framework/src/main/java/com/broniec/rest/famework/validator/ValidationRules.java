@@ -3,23 +3,22 @@ package com.broniec.rest.famework.validator;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public interface ValidationRules<O> {
 
     //todo: add default impl
-    Stream<ConstraintViolation> execute(O obj);
+    Stream<ConstraintViolation> execute(O obj, ValidationContext context);
 
     static <T> StringFieldConstraints<T> stringValidation(Function<T, String> getter, String fieldLabel) {
         return new StringFieldConstraints<>(getter, fieldLabel);
     }
 
-    static <T> UnicityConstraint<T> unicityConstraint(Predicate<T> duplicationFinder) {
+    static <T> UnicityConstraint<T> unicityConstraint(ValidationPredicate<T> duplicationFinder) {
         return new UnicityConstraint<>(duplicationFinder);
     }
 
-    static <T> UnicityConstraint<T> unicityConstraint(Predicate<T> duplicationFinder, String fieldLabel) {
+    static <T> UnicityConstraint<T> unicityConstraint(ValidationPredicate<T> duplicationFinder, String fieldLabel) {
         return new UnicityConstraint<>(duplicationFinder, fieldLabel);
     }
 

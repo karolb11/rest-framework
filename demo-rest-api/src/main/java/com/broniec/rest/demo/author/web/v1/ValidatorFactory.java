@@ -6,6 +6,7 @@ import com.broniec.rest.demo.TimeService;
 import com.broniec.rest.demo.author.domain.Author;
 import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ValidationConfig;
+import com.broniec.rest.famework.validator.ValidationContext;
 import com.broniec.rest.famework.validator.Validator;
 import lombok.RequiredArgsConstructor;
 
@@ -48,12 +49,11 @@ class ValidatorFactory {
         return new Validator<>(config);
     }
 
-    private boolean hasDuplicates(AuthorDTO authorDTO) {
-        //todo: authorId validation
+    private boolean hasDuplicates(AuthorDTO authorDTO, ValidationContext context) {
         return authorFacade.findAuthor(
                         authorDTO.firstName(),
                         authorDTO.lastName()
-                ).map(Author::getId).filter(id -> !id.equals(authorDTO.id()))
+                ).map(Author::getId).filter(id -> !id.equals(context.updatedResourceId()))
                 .isPresent();
     }
 
