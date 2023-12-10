@@ -38,8 +38,7 @@ class AuthorUpdateCommandHandler {
                 .operationType(OperationType.UPDATE)
                 .updatedResourceId(authorId)
                 .build();
-        var constraintViolations = validator.validate(authorDTO, validationContext);
-        return constraintViolations;
+        return validator.validate(authorDTO, validationContext);
     }
 
     private Author saveAuthor(Long authorId, AuthorDTO authorDTO) {
