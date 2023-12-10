@@ -22,7 +22,7 @@ class AuthorRegistrationCommandHandler {
     private final AuthorFacade authorFacade;
     private final ValidatorFactory validatorFactory;
 
-    public Either<Collection<ConstraintViolation>, AuthorDTO> registerAuthor(AuthorDTO authorDTO) {
+    public Either<Collection<ConstraintViolation>, AuthorDTO> handle(AuthorDTO authorDTO) {
         var constraintViolations = validateAuthor(authorDTO);
         if (constraintViolations.isEmpty()) {
             var author = saveAuthor(authorDTO);

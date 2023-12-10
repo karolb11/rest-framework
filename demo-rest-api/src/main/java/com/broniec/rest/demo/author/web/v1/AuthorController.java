@@ -22,7 +22,7 @@ class AuthorController {
 
     @PostMapping
     public ResponseEntity<?> createAuthor(@RequestBody AuthorDTO authorDTO) {
-        var response = authorRegistrationCommandHandler.registerAuthor(authorDTO);
+        var response = authorRegistrationCommandHandler.handle(authorDTO);
         return response.fold(
                 res -> ResponseEntity.badRequest().body(res),
                 ResponseEntity::ok
@@ -31,7 +31,7 @@ class AuthorController {
 
     @PutMapping("/{authorId}")
     public ResponseEntity<?> updateAuthor(@PathVariable Long authorId, @RequestBody AuthorDTO authorDTO) {
-        var response = authorUpdateCommandHandler.updateAuthor(authorId, authorDTO);
+        var response = authorUpdateCommandHandler.handle(authorId, authorDTO);
         return response.fold(
                 res -> ResponseEntity.badRequest().body(res),
                 ResponseEntity::ok

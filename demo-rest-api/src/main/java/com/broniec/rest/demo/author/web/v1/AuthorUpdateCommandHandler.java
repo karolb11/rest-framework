@@ -22,10 +22,10 @@ class AuthorUpdateCommandHandler {
     private final AuthorFacade authorFacade;
     private final ValidatorFactory validatorFactory;
 
-    public Either<Collection<ConstraintViolation>, AuthorDTO> updateAuthor(Long authorId, AuthorDTO authorDTO) {
+    public Either<Collection<ConstraintViolation>, AuthorDTO> handle(Long authorId, AuthorDTO authorDTO) {
         var constraintViolations = validateAuthor(authorId, authorDTO);
         if (constraintViolations.isEmpty()) {
-            var author = saveAuthor(authorId, authorDTO);
+            var author = updateAuthor(authorId, authorDTO);
             return Either.right(authorMapper.toAuthorDTO(author));
         } else {
             return Either.left(constraintViolations);
@@ -41,7 +41,7 @@ class AuthorUpdateCommandHandler {
         return validator.validate(authorDTO, validationContext);
     }
 
-    private Author saveAuthor(Long authorId, AuthorDTO authorDTO) {
+    private Author updateAuthor(Long authorId, AuthorDTO authorDTO) {
         var author = authorMapper.toAuthor(authorDTO);
         author = authorFacade.updateAuthor(authorId, author);
 
