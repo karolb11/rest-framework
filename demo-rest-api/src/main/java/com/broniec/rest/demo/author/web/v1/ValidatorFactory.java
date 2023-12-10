@@ -50,11 +50,14 @@ class ValidatorFactory {
     }
 
     private boolean hasDuplicates(AuthorDTO authorDTO, ValidationContext context) {
-        return authorFacade.findAuthor(
-                        authorDTO.firstName(),
-                        authorDTO.lastName()
-                ).map(Author::getId).filter(id -> !id.equals(context.updatedResourceId()))
-                .isPresent();
+        var collidingAuthor = authorFacade.findAuthor(authorDTO.firstName(), authorDTO.lastName());
+        return switch (context.operationType()) {
+            case CREATE -> collidingAuthor.isPresent();
+            case UPDATE -> collidingAuthor
+                    .map(Author::getId)
+                    .filter(id -> !id.equals(context.updatedResourceId()))
+                    .isPresent();
+        };
     }
 
     private ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {
