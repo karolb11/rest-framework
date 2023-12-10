@@ -16,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class AuthorController {
 
-    private final AuthorCommandHandler authorCommandHandler;
+    private final AuthorUpdateCommandHandler authorUpdateCommandHandler;
+    private final AuthorRegistrationCommandHandler authorRegistrationCommandHandler;
     private final AuthorQueryHandler authorQueryHandler;
 
     @PostMapping
     public ResponseEntity<?> createAuthor(@RequestBody AuthorDTO authorDTO) {
-        var response = authorCommandHandler.registerAuthor(authorDTO);
+        var response = authorRegistrationCommandHandler.registerAuthor(authorDTO);
         return response.fold(
                 res -> ResponseEntity.badRequest().body(res),
                 ResponseEntity::ok
@@ -30,7 +31,7 @@ class AuthorController {
 
     @PutMapping("/{authorId}")
     public ResponseEntity<?> updateAuthor(@PathVariable Long authorId, @RequestBody AuthorDTO authorDTO) {
-        var response = authorCommandHandler.updateAuthor(authorId, authorDTO);
+        var response = authorUpdateCommandHandler.updateAuthor(authorId, authorDTO);
         return response.fold(
                 res -> ResponseEntity.badRequest().body(res),
                 ResponseEntity::ok
