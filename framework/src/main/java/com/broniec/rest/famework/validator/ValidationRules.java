@@ -7,7 +7,6 @@ import java.util.stream.Stream;
 
 public interface ValidationRules<O> {
 
-    //todo: add default impl
     Stream<ConstraintViolation> execute(O obj, ValidationContext context);
 
     static <T> StringFieldConstraints<T> stringValidation(Function<T, String> getter, String fieldLabel) {
