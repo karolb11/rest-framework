@@ -8,7 +8,9 @@ import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ConstraintViolation;
 import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 class AuthorCommandHandler {
@@ -23,6 +25,8 @@ class AuthorCommandHandler {
         if (constraintViolations.isEmpty()) {
             var author = authorMapper.toAuthor(authorDTO);
             author = authorFacade.saveAuthor(author);
+
+            log.info("Author registered, id: {}", author.getId());
             return Either.right(authorMapper.toAuthorDTO(author));
         } else {
             return Either.left(constraintViolations);
@@ -35,6 +39,8 @@ class AuthorCommandHandler {
         if (constraintViolations.isEmpty()) {
             var author = authorMapper.toAuthor(authorDTO);
             author = authorFacade.updateAuthor(authorId, author);
+
+            log.info("Author updated, id: {}", authorId);
             return Either.right(authorMapper.toAuthorDTO(author));
         } else {
             return Either.left(constraintViolations);
