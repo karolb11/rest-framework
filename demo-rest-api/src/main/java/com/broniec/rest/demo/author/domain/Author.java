@@ -3,6 +3,7 @@ package com.broniec.rest.demo.author.domain;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.broniec.rest.famework.Entity;
 import com.broniec.rest.famework.UpdateHelper;
@@ -48,5 +49,20 @@ public class Author implements Entity<Author, Long> {
         this.dateOfBirth = reference.dateOfBirth;
         this.dateOfDeath = reference.dateOfDeath;
         new UpdateHelper().updateCollection(localDescriptor, reference.getLocalDescriptor());
+    }
+
+    @Override
+    public Author copy() {
+        var localDescriptor = this.localDescriptor.stream()
+                .map(Entity::copy)
+                .collect(Collectors.toSet());
+
+        return Author.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .dateOfBirth(dateOfBirth)
+                .dateOfDeath(dateOfDeath)
+                .localDescriptor(localDescriptor)
+                .build();
     }
 }

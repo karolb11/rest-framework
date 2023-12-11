@@ -17,7 +17,7 @@ public class UpdateHelper {
              var matchingById = Objects.optionalCollection(() -> collectionById.get(refEntity.getId()));
              matchingById.forEach(entity -> entity.update(refEntity));
              if (matchingById.isEmpty()) {
-                 collection.add(refEntity);
+                 collection.add(refEntity.copy());
              }
          });
      }

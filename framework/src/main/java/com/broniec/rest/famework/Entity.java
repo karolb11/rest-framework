@@ -6,4 +6,6 @@ public interface Entity<T, ID> {
 
     void update(T reference);
 
+    T copy();
+
 }

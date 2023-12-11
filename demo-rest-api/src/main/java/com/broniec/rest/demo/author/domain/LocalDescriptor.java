@@ -28,4 +28,12 @@ public class LocalDescriptor implements Entity<LocalDescriptor, Long> {
         this.sourceSystem = reference.sourceSystem;
         this.localIdentifier = reference.localIdentifier;
     }
+
+    @Override
+    public LocalDescriptor copy() {
+        return LocalDescriptor.builder()
+                .sourceSystem(sourceSystem)
+                .localIdentifier(localIdentifier)
+                .build();
+    }
 }
