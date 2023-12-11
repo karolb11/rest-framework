@@ -14,6 +14,10 @@ class ConstraintViolationBuilder {
         this.fieldLabel = fieldLabel;
     }
 
+    ConstraintViolation notApplicableForCreateRequest() {
+        return new ConstraintViolation(fieldLabel, "Not applicable for create request");
+    }
+
     ConstraintViolation mandatoryField() {
         return new ConstraintViolation(fieldLabel, "Mandatory field");
     }

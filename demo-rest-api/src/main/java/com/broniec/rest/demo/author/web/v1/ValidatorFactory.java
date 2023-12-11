@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import static com.broniec.rest.famework.validator.ValidationRules.composedListValidator;
 import static com.broniec.rest.famework.validator.ValidationRules.dateValidation;
+import static com.broniec.rest.famework.validator.ValidationRules.identityConstraint;
 import static com.broniec.rest.famework.validator.ValidationRules.stringValidation;
 import static com.broniec.rest.famework.validator.ValidationRules.unicityConstraint;
 
@@ -25,6 +26,7 @@ class ValidatorFactory {
     public Validator<AuthorDTO> buildAuthorDTOValidator() {
         var descriptorValidator = buildLocalDescriptorDTOValidationConfig();
         var config = new ValidationConfig<AuthorDTO>();
+        config.addRules(identityConstraint(AuthorDTO::id, AuthorDTO.Fields.id));
         config.addRules(unicityConstraint(this::hasDuplicates));
         config.addRules(stringValidation(AuthorDTO::firstName, AuthorDTO.Fields.firstName)
                 .mandatory()
@@ -62,6 +64,7 @@ class ValidatorFactory {
 
     private ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {
         var config = new ValidationConfig<LocalDescriptorDTO>();
+        config.addRules(identityConstraint(LocalDescriptorDTO::id, LocalDescriptorDTO.Fields.id));
         config.addRules(stringValidation(LocalDescriptorDTO::localIdentifier, LocalDescriptorDTO.Fields.localIdentifier)
                 .mandatory()
                 .maxLength(30)

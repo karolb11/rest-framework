@@ -9,6 +9,10 @@ public interface ValidationRules<O> {
 
     Stream<ConstraintViolation> execute(O obj, ValidationContext context);
 
+    static <T> ValidationRules<T> identityConstraint(Function<T, ?> valueGetter, String filedLabel) {
+        return new IdentityConstraint<>(valueGetter, filedLabel);
+    }
+
     static <T> StringFieldConstraints<T> stringValidation(Function<T, String> getter, String fieldLabel) {
         return new StringFieldConstraints<>(getter, fieldLabel);
     }
