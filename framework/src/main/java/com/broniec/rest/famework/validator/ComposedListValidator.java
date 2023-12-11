@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class ComposedListValidator<O, F> implements ValidationRules<O> {
+class ComposedListValidator<O, F> implements ValidationRules<O> {
 
     private final Function<O, List<F>> valueGetter;
     private final String fieldLabel;

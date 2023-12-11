@@ -17,11 +17,11 @@ public interface ValidationRules<O> {
         return new StringFieldConstraints<>(getter, fieldLabel);
     }
 
-    static <T> UnicityConstraint<T> unicityConstraint(ValidationPredicate<T> duplicationFinder) {
+    static <T> ValidationRules<T> unicityConstraint(ValidationPredicate<T> duplicationFinder) {
         return new UnicityConstraint<>(duplicationFinder);
     }
 
-    static <T> UnicityConstraint<T> unicityConstraint(ValidationPredicate<T> duplicationFinder, String fieldLabel) {
+    static <T> ValidationRules<T> unicityConstraint(ValidationPredicate<T> duplicationFinder, String fieldLabel) {
         return new UnicityConstraint<>(duplicationFinder, fieldLabel);
     }
 
@@ -37,7 +37,7 @@ public interface ValidationRules<O> {
         return new ComposedValidator<>(valueGetter, fieldLabel, config);
     }
 
-    static <T, K> ComposedListValidator<T, K> composedListValidator(Function<T, List<K>> valueGetter, String fieldLabel, ValidationConfig<K> config) {
+    static <T, K> ValidationRules<T> composedListValidator(Function<T, List<K>> valueGetter, String fieldLabel, ValidationConfig<K> config) {
         return new ComposedListValidator<>(valueGetter, fieldLabel, config);
     }
 
