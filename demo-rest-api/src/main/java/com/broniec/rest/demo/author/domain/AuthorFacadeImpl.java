@@ -1,9 +1,8 @@
 package com.broniec.rest.demo.author.domain;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Component;
 
+import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -25,12 +24,16 @@ class AuthorFacadeImpl implements AuthorFacade {
     }
 
     @Override
-    public Optional<Author> findAuthor(Long authorId) {
-        return authorRepository.findById(authorId);
+    public Either<DomainException, Author> findAuthor(Long authorId) {
+        return authorRepository.findById(authorId)
+                .<Either<DomainException, Author>>map(Either::right)
+                .orElseGet(() -> Either.left(DomainException.authorNotFound(authorId)));
     }
 
     @Override
-    public Optional<Author> findAuthor(String firstName, String lastName) {
-        return authorRepository.findByFirstNameAndLastName(firstName, lastName);
+    public Either<DomainException, Author> findAuthor(String firstName, String lastName) {
+        return authorRepository.findByFirstNameAndLastName(firstName, lastName)
+                .<Either<DomainException, Author>>map(Either::right)
+                .orElseGet(() -> Either.left(DomainException.authorNotFound(firstName, lastName)));
     }
 }
