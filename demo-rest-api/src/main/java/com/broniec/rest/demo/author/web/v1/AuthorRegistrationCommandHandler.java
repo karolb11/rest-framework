@@ -9,7 +9,6 @@ import com.broniec.rest.demo.author.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ConstraintViolation;
 import com.broniec.rest.famework.validator.OperationType;
 import com.broniec.rest.famework.validator.ValidationContext;
-import io.vavr.control.Either;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,13 +21,13 @@ class AuthorRegistrationCommandHandler {
     private final AuthorFacade authorFacade;
     private final ValidatorFactory validatorFactory;
 
-    public Either<Collection<ConstraintViolation>, AuthorDTO> handle(AuthorDTO authorDTO) {
+    public AuthorDTO handle(AuthorDTO authorDTO) throws ValidationException {
         var constraintViolations = validateAuthor(authorDTO);
         if (constraintViolations.isEmpty()) {
             var author = saveAuthor(authorDTO);
-            return Either.right(authorMapper.toAuthorDTO(author));
+            return authorMapper.toAuthorDTO(author);
         } else {
-            return Either.left(constraintViolations);
+            throw new ValidationException(constraintViolations);
         }
     }
 

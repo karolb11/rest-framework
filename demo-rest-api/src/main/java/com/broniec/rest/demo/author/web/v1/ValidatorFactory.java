@@ -52,7 +52,7 @@ class ValidatorFactory {
     }
 
     private boolean hasDuplicates(AuthorDTO authorDTO, ValidationContext context) {
-        var collidingAuthor = authorFacade.findAuthor(authorDTO.firstName(), authorDTO.lastName()).toJavaOptional();
+        var collidingAuthor = authorFacade.findAuthor(authorDTO.firstName(), authorDTO.lastName());
         return switch (context.operationType()) {
             case CREATE -> collidingAuthor.isPresent();
             case UPDATE -> collidingAuthor

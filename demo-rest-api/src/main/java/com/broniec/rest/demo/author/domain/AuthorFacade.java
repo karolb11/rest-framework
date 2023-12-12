@@ -1,11 +1,11 @@
 package com.broniec.rest.demo.author.domain;
 
-import io.vavr.control.Either;
+import java.util.Optional;
 
 public interface AuthorFacade {
-    Either<DomainException, Author> findAuthor(Long authorId);
+    Optional<Author> findAuthor(Long authorId);
 
-    Either<DomainException, Author> findAuthor(String firstName, String lastName);
+    Optional<Author> findAuthor(String firstName, String lastName);
 
     Author saveAuthor(Author authorToBeRegistered);
 

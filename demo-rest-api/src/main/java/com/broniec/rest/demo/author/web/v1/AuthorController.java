@@ -22,29 +22,29 @@ class AuthorController {
 
     @PostMapping
     public ResponseEntity<?> createAuthor(@RequestBody AuthorDTO authorDTO) {
-        return authorRegistrationCommandHandler.handle(authorDTO)
-                .fold(
-                        exception -> ResponseEntity.badRequest().body(exception),
-                        ResponseEntity::ok
-                );
+        try {
+            var response = authorRegistrationCommandHandler.handle(authorDTO);
+            return ResponseEntity.ok(response);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getConstraintViolations());
+        }
     }
 
     @PutMapping("/{authorId}")
     public ResponseEntity<?> updateAuthor(@PathVariable Long authorId, @RequestBody AuthorDTO authorDTO) {
-        return authorUpdateCommandHandler.handle(authorId, authorDTO)
-                .fold(
-                        exception -> ResponseEntity.badRequest().body(exception),
-                        ResponseEntity::ok
-                );
+        try {
+            var response = authorUpdateCommandHandler.handle(authorId, authorDTO);
+            return ResponseEntity.ok(response);
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getConstraintViolations());
+        }
     }
 
     @GetMapping("/{authorId}")
     public ResponseEntity<?> getAuthorById(@PathVariable Long authorId) {
-        return authorQueryHandler.queryAuthorById(authorId)
-                .fold(
-                        exception -> ResponseEntity.badRequest().body(exception),
-                        ResponseEntity::ok
-                );
+        return ResponseEntity.of(authorQueryHandler.queryAuthorById(authorId));
     }
 
 }

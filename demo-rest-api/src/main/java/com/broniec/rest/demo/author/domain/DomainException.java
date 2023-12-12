@@ -1,6 +1,9 @@
 package com.broniec.rest.demo.author.domain;
 
 
+import lombok.Getter;
+
+@Getter
 public class DomainException extends RuntimeException {
 
     /*
@@ -8,8 +11,11 @@ public class DomainException extends RuntimeException {
     Default access of building methods, because only domain must be able to throw DomainsExceptions
      */
 
+    private final Details details;
+
     private DomainException(String message) {
         super(message);
+        details = new Details(message);
     }
 
     static DomainException authorNotFound(Long authorId) {
@@ -19,5 +25,7 @@ public class DomainException extends RuntimeException {
     static DomainException authorNotFound(String firstName, String lastName) {
         return new DomainException("Author not found by first name (%s) and last name (%s)".formatted(firstName, lastName));
     }
+
+    public record Details(String message) { }
 
 }
