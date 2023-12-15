@@ -18,7 +18,7 @@ import static com.broniec.rest.famework.validator.ValidationRules.unicityConstra
 
 @Component
 @RequiredArgsConstructor
-class ValidatorFactory {
+class AuthorValidatorFactory {
 
     private final AuthorFacade authorFacade;
     private final TimeService timeService;

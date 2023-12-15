@@ -13,6 +13,7 @@ import static com.broniec.rest.famework.Objects.optionalCollection;
 class AuthorMapper {
 
     private final LocalDescriptorMapper localDescriptorMapper;
+    private final OpusMapper opusMapper;
 
     public Author toAuthor(AuthorDTO authorDTO) {
         var author = Author.builder()
@@ -32,6 +33,9 @@ class AuthorMapper {
         var localDescriptor = Objects.optionalCollection(author::getLocalDescriptor).stream()
                 .map(localDescriptorMapper::toLocalDescriptorDTO)
                 .toList();
+        var opus = Objects.optionalCollection(author::getOpus).stream()
+                .map(opusMapper::toOpusDTO)
+                .toList();
         return AuthorDTO.builder()
                 .id(author.getId())
                 .firstName(author.getFirstName())
@@ -39,6 +43,7 @@ class AuthorMapper {
                 .dateOfBirth(author.getDateOfBirth())
                 .dateOfDeath(author.getDateOfDeath())
                 .localDescriptor(localDescriptor)
+                .opus(opus)
                 .build();
     }
 

@@ -39,8 +39,17 @@ public class Author implements Entity<Author, Long> {
     @Builder.Default
     private Set<LocalDescriptor> localDescriptor = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "author_id")
+    @Builder.Default
+    private Set<Opus> opus = new HashSet<>();
+
     public void addLocalDescriptor(LocalDescriptor localDescriptor) {
         this.localDescriptor.add(localDescriptor);
+    }
+
+    public void addOpus(Opus opus) {
+        this.opus.add(opus);
     }
 
     public void update(Author reference) {

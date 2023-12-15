@@ -17,12 +17,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AuthorDTOValidationTest extends UnitTest {
 
     @Autowired
-    private ValidatorFactory validatorFactory;
+    private AuthorValidatorFactory authorValidatorFactory;
 
     @Test
     void shouldValidateValidObject() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder().build();
         //when
         var result = validator.validate(author, createValidationContext());
@@ -33,7 +33,7 @@ class AuthorDTOValidationTest extends UnitTest {
     @Test
     void shouldReturnViolationForEmptyFirstName() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
                 .firstName(null)
                 .build();
@@ -48,7 +48,7 @@ class AuthorDTOValidationTest extends UnitTest {
     @Test
     void shouldReturnViolationForTooShortFirstName() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
                 .firstName("a")
                 .build();
@@ -63,7 +63,7 @@ class AuthorDTOValidationTest extends UnitTest {
     @Test
     void shouldReturnViolationForTooLongFirstName() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
                 .firstName(RandomStringUtils.random(500))
                 .build();
@@ -78,7 +78,7 @@ class AuthorDTOValidationTest extends UnitTest {
     @Test
     void shouldReturnViolationForEmptyDateOfBirth() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
                 .dateOfBirth(null)
                 .build();
@@ -93,7 +93,7 @@ class AuthorDTOValidationTest extends UnitTest {
     @Test
     void shouldReturnViolationForFutureDateOfBirth() {
         //given
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
                 .dateOfBirth(LocalDate.of(2001, 1, 10))
                 .dateOfDeath(null)

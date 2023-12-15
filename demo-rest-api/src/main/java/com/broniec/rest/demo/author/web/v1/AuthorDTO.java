@@ -17,5 +17,6 @@ record AuthorDTO(
         LocalDate dateOfBirth,
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate dateOfDeath,
-        List<LocalDescriptorDTO> localDescriptor
+        List<LocalDescriptorDTO> localDescriptor,
+        List<OpusDTO> opus
 ) { }

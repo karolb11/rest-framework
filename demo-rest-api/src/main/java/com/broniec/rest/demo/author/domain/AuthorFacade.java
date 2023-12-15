@@ -10,4 +10,7 @@ public interface AuthorFacade {
     Author saveAuthor(Author authorToBeRegistered);
 
     Author updateAuthor(Long authorId, Author author);
+
+    Opus saveOpus(Long authorId, Opus opus);
+
 }

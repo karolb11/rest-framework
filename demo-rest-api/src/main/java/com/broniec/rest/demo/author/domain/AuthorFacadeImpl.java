@@ -12,6 +12,7 @@ class AuthorFacadeImpl implements AuthorFacade {
 
     private final AuthorRegistrationService authorRegistrationService;
     private final AuthorUpdateService authorUpdateService;
+    private final OpusRegistrationService opusRegistrationService;
     private final AuthorRepository authorRepository;
 
     @Override
@@ -22,6 +23,11 @@ class AuthorFacadeImpl implements AuthorFacade {
     @Override
     public Author updateAuthor(Long authorId, Author author) {
         return authorUpdateService.updateAuthor(authorId, author);
+    }
+
+    @Override
+    public Opus saveOpus(Long authorId, Opus opus) {
+        return opusRegistrationService.registerOpus(authorId, opus);
     }
 
     @Override

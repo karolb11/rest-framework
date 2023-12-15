@@ -19,7 +19,7 @@ class AuthorUpdateCommandHandler {
 
     private final AuthorMapper authorMapper;
     private final AuthorFacade authorFacade;
-    private final ValidatorFactory validatorFactory;
+    private final AuthorValidatorFactory authorValidatorFactory;
 
     public AuthorDTO handle(Long authorId, AuthorDTO authorDTO) throws ValidationException {
         var constraintViolations = validateAuthor(authorId, authorDTO);
@@ -32,7 +32,7 @@ class AuthorUpdateCommandHandler {
     }
 
     private Collection<ConstraintViolation> validateAuthor(Long authorId, AuthorDTO authorDTO) {
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var validationContext = ValidationContext.builder()
                 .operationType(OperationType.UPDATE)
                 .updatedResourceId(authorId)

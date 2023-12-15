@@ -19,7 +19,7 @@ class AuthorRegistrationCommandHandler {
 
     private final AuthorMapper authorMapper;
     private final AuthorFacade authorFacade;
-    private final ValidatorFactory validatorFactory;
+    private final AuthorValidatorFactory authorValidatorFactory;
 
     public AuthorDTO handle(AuthorDTO authorDTO) throws ValidationException {
         var constraintViolations = validateAuthor(authorDTO);
@@ -32,7 +32,7 @@ class AuthorRegistrationCommandHandler {
     }
 
     private Collection<ConstraintViolation> validateAuthor(AuthorDTO authorDTO) {
-        var validator = validatorFactory.buildAuthorDTOValidator();
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var validationContext = ValidationContext.builder()
                 .operationType(OperationType.CREATE)
                 .build();

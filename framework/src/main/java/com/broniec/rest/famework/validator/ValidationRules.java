@@ -1,6 +1,7 @@
 package com.broniec.rest.famework.validator;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -11,6 +12,10 @@ public interface ValidationRules<O> {
 
     static <T> ValidationRules<T> identityConstraint(Function<T, ?> valueGetter, String filedLabel) {
         return new IdentityConstraint<>(valueGetter, filedLabel);
+    }
+
+    static <T> ValidationRules<T> typeConstraint(Function<T, String> valueGetter, Collection<String> acceptableValues) {
+        return new TypeConstraint<>(valueGetter, acceptableValues);
     }
 
     static <T> StringFieldConstraints<T> stringValidation(Function<T, String> getter, String fieldLabel) {

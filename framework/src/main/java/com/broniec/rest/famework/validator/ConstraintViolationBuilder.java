@@ -14,6 +14,10 @@ class ConstraintViolationBuilder {
         this.fieldLabel = fieldLabel;
     }
 
+    public ConstraintViolation invalidType() {
+        return new ConstraintViolation(fieldLabel, "Invalid type");
+    }
+
     ConstraintViolation notApplicableForCreateRequest() {
         return new ConstraintViolation(fieldLabel, "Not applicable for create request");
     }
