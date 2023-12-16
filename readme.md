@@ -49,7 +49,8 @@ This separation simplifies the management of API versions:
 
 ### DTO
 By DTO, I mostly mean class being consumed or served by web controllers.<br>
-Utilizing records as Data Transfer Objects is an excellent choice, thanks to their immutability and built-in features.
+Utilizing records as Data Transfer Objects is an excellent choice, thanks to their immutability and built-in features.<br>
+Immutability of DTOs is crucial to keep the validation and entire DTO processing transparent, easy to monitor and debug.
 
 ### Validation
 Validation poses the most significant challenge in the entire project. 
@@ -57,5 +58,9 @@ Our goal was to develop our own POJO validation framework supporting straightfor
 Additionally, the framework is designed to handle more complex domain-related validations, 
 including uniqueness checks and validation of relationships between specific properties of POJOs(e.g., ensuring one date is before another).<br>
 It is equally crucial to offer a convenient method for declaring a validation configuration for a specific POJO. The configuration must be easy to create, read, and maintain. 
-Experience has shown that validators can become intricate when designed and maintained without proper attention.
+Experience has shown that validators can become intricate when designed and maintained without proper attention.<br>
+Validation config is composed of set of validation rules. 
+A validation rule is a set of constraints, usually specific to one, particular property of POJO.
+Validation framework is intended to be easy expandable, by adding new validation constraints or even entire rules.
+
 
