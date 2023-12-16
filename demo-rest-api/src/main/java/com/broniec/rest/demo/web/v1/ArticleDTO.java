@@ -2,11 +2,12 @@ package com.broniec.rest.demo.web.v1;
 
 import java.time.LocalDate;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 
-@Builder
-@FieldNameConstants
+@Builder(access = AccessLevel.PACKAGE)
+@FieldNameConstants(level = AccessLevel.PACKAGE)
 record ArticleDTO(
         Long id,
         String title,

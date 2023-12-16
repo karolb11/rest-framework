@@ -4,11 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.experimental.FieldNameConstants;
 
-@Builder
-@FieldNameConstants
+@Builder(access = AccessLevel.PACKAGE)
+@FieldNameConstants(level = AccessLevel.PACKAGE)
 record AuthorDTO(
         Long id,
         String firstName,
