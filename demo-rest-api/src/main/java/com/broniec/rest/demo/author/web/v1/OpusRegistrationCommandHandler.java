@@ -22,7 +22,7 @@ class OpusRegistrationCommandHandler {
     private final OpusValidationFactory opusValidationFactory;
 
     public OpusDTO handle(Long authorId, OpusDTO opusDTO) throws ValidationException {
-        var constraintViolations = validateOpus(opusDTO);
+        var constraintViolations = validateOpus(authorId, opusDTO);
         if (constraintViolations.isEmpty()) {
             var opus = saveOpus(authorId, opusDTO);
             return opusMapper.toOpusDTO(opus);
@@ -31,9 +31,10 @@ class OpusRegistrationCommandHandler {
         }
     }
 
-    private Collection<ConstraintViolation> validateOpus(OpusDTO opusDTO) {
+    private Collection<ConstraintViolation> validateOpus(Long authorId, OpusDTO opusDTO) {
         var validationContext = ValidationContext.builder()
                 .operationType(OperationType.CREATE)
+                .updatedAggregateResourceId(authorId)
                 .build();
         return switch (opusDTO) {
             case ArticleDTO article -> opusValidationFactory.buildArticleDTOValidator().validate(article, validationContext);

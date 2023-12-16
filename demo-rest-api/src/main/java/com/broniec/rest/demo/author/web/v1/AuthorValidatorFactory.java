@@ -57,7 +57,7 @@ class AuthorValidatorFactory {
             case CREATE -> collidingAuthor.isPresent();
             case UPDATE -> collidingAuthor
                     .map(Author::getId)
-                    .filter(id -> !id.equals(context.updatedResourceId()))
+                    .filter(id -> !id.equals(context.updatedAggregateResourceId()))
                     .isPresent();
         };
     }

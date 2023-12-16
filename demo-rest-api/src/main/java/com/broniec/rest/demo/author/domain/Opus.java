@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +29,9 @@ public abstract class Opus {
 
     private String title;
     private LocalDate publicationDate;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private Author author;
 
 }
