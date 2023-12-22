@@ -16,6 +16,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 sealed interface OpusDTO permits ArticleDTO, BookDTO, UnknownOpusDTO {
 
+    class Fields {
+        public static final String id = "id";
+        public static final String title = "title";
+        public static final String publicationDate = "publicationDate";
+    }
+
     String TYPE_BOOK = "book";
     String TYPE_ARTICLE = "article";
 

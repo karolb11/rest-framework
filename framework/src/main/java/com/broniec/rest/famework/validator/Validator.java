@@ -1,6 +1,7 @@
 package com.broniec.rest.famework.validator;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 
 public class Validator<T> {
@@ -12,8 +13,10 @@ public class Validator<T> {
     }
 
     public Collection<ConstraintViolation> validate(T obj, ValidationContext context) {
-        return config.getValidationRules().stream()
-                .flatMap(rules -> rules.execute(obj, context))
+        return Stream.concat(
+                        config.getSuperclassValidationRules().stream(),
+                        config.getValidationRules().stream()
+                ).flatMap(rules -> rules.execute(obj, context))
                 .toList();
     }
 
