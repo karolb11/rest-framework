@@ -21,10 +21,10 @@ import static com.broniec.rest.famework.validator.ValidationRules.unicityConstra
 class AuthorValidatorFactory {
 
     private final AuthorFacade authorFacade;
+    private final LocalDescriptorValidatorFactory localDescriptorValidatorFactory;
     private final TimeService timeService;
 
     public Validator<AuthorDTO> buildAuthorDTOValidator() {
-        var descriptorValidator = buildLocalDescriptorDTOValidationConfig();
         var config = new ValidationConfig<AuthorDTO>();
         config.addRules(identityConstraint(AuthorDTO::id, AuthorDTO.Fields.id));
         config.addRules(unicityConstraint(this::hasDuplicates));
@@ -47,7 +47,9 @@ class AuthorValidatorFactory {
                 .mustBePast(timeService::currentDate)
         );
 
+        var descriptorValidator = localDescriptorValidatorFactory.buildLocalDescriptorDTOValidationConfig();
         config.addRules(composedListValidator(AuthorDTO::localDescriptor, AuthorDTO.Fields.localDescriptor, descriptorValidator));
+
         return new Validator<>(config);
     }
 
@@ -60,20 +62,6 @@ class AuthorValidatorFactory {
                     .filter(id -> !id.equals(context.updatedAggregateResourceId()))
                     .isPresent();
         };
-    }
-
-    private ValidationConfig<LocalDescriptorDTO> buildLocalDescriptorDTOValidationConfig() {
-        var config = new ValidationConfig<LocalDescriptorDTO>();
-        config.addRules(identityConstraint(LocalDescriptorDTO::id, LocalDescriptorDTO.Fields.id));
-        config.addRules(stringValidation(LocalDescriptorDTO::localIdentifier, LocalDescriptorDTO.Fields.localIdentifier)
-                .mandatory()
-                .maxLength(30)
-        );
-        config.addRules(stringValidation(LocalDescriptorDTO::sourceSystem, LocalDescriptorDTO.Fields.sourceSystem)
-                .mandatory()
-                .maxLength(100)
-        );
-        return config;
     }
 
 }
