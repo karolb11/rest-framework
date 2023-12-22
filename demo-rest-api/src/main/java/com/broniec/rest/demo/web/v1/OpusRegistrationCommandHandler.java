@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.broniec.rest.demo.domain.AuthorFacade;
 import com.broniec.rest.demo.domain.Opus;
 import com.broniec.rest.famework.validator.ConstraintViolation;
-import com.broniec.rest.famework.validator.OperationType;
 import com.broniec.rest.famework.validator.ValidationContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +31,8 @@ class OpusRegistrationCommandHandler {
     }
 
     private Collection<ConstraintViolation> validateOpus(Long authorId, OpusDTO opusDTO) {
-        var validationContext = ValidationContext.builder()
-                .operationType(OperationType.CREATE)
-                .updatedAggregateResourceId(authorId)
-                .build();
+        var validationContext = ValidationContext.create()
+                .withUpdatedAggregateResourceId(authorId);
         return switch (opusDTO) {
             case ArticleDTO article -> opusValidationFactory.buildArticleDTOValidator().validate(article, validationContext);
             case BookDTO book -> opusValidationFactory.buildBookDTOValidator().validate(book, validationContext);

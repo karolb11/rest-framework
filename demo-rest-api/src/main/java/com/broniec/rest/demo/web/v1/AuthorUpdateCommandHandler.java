@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.broniec.rest.demo.domain.Author;
 import com.broniec.rest.demo.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ConstraintViolation;
-import com.broniec.rest.famework.validator.OperationType;
 import com.broniec.rest.famework.validator.ValidationContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +32,8 @@ class AuthorUpdateCommandHandler {
 
     private Collection<ConstraintViolation> validateAuthor(Long authorId, AuthorDTO authorDTO) {
         var validator = authorValidatorFactory.buildAuthorDTOValidator();
-        var validationContext = ValidationContext.builder()
-                .operationType(OperationType.UPDATE)
-                .updatedResourceId(authorId)
-                .build();
+        var validationContext = ValidationContext.update()
+                .withUpdatedAggregateResourceId(authorId);
         return validator.validate(authorDTO, validationContext);
     }
 
