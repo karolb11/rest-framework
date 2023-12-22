@@ -41,7 +41,7 @@ class OpusValidationFactory {
                 .mustBePast(timeService::currentDate)
         );
         //article-specific fields
-        config.addRules(stringValidation(ArticleDTO::title, ArticleDTO.Fields.title)
+        config.addRules(stringValidation(ArticleDTO::periodicalName, ArticleDTO.Fields.periodicalName)
                 .mandatory()
                 .minLength(3)
                 .maxLength(255)
@@ -59,7 +59,6 @@ class OpusValidationFactory {
                 .mandatory()
                 .minLength(3)
                 .maxLength(255)
-
         );
         config.addRules(dateValidation(BookDTO::publicationDate, BookDTO.Fields.publicationDate)
                 .mandatory()
