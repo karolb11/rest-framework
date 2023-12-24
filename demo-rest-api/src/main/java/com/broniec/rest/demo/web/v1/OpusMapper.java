@@ -1,5 +1,7 @@
 package com.broniec.rest.demo.web.v1;
 
+import java.util.Collection;
+
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.domain.Article;
@@ -12,55 +14,127 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 class OpusMapper {
-    public Opus toOpus(OpusDTO opusDTO) {
-        return switch (opusDTO) {
-            case ArticleDTO article -> buildArticle(article);
-            case BookDTO book -> buildBook(book);
-            case UnknownOpusDTO unknown -> throw new IllegalArgumentException("OpusDTO can not be " + UnknownOpusDTO.class.getName());
-        };
+
+    private final Collection<IOpusMapper> mappers;
+
+    public Opus toEntity(OpusDTO opusDTO) {
+        var mapper = dispatchMapper(opusDTO);
+        return mapper.toEntity(opusDTO);
     }
 
-    private Book buildBook(BookDTO book) {
-        return Book.builder()
-                .id(book.id())
-                .title(book.title())
-                .publicationDate(book.publicationDate())
-                .dedication(book.dedication())
-                .build();
+    public OpusDTO toDTO(Opus opus) {
+        var mapper = dispatchMapper(opus);
+        return mapper.toDTO(opus);
     }
 
-    private Article buildArticle(ArticleDTO article) {
-        return Article.builder()
-                .id(article.id())
-                .periodicalName(article.periodicalName())
-                .title(article.title())
-                .publicationDate(article.publicationDate())
-                .build();
+    private IOpusMapper dispatchMapper(OpusDTO opusDTO) {
+        return mappers.stream().filter(mapper -> mapper.supports(opusDTO))
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Unable to dispatch IOpusMapper for " + opusDTO.getClass().getName()));
     }
 
-    public OpusDTO toOpusDTO(Opus opus) {
-        return switch (opus) {
-            case Article article -> buildArticleDTO(article);
-            case Book book -> buildBookDTO(book);
-            default -> throw new IllegalArgumentException("Opus can not be: " + opus.getClass().getName());
-        };
+    private IOpusMapper dispatchMapper(Opus opus) {
+        return mappers.stream().filter(mapper -> mapper.supports(opus))
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Unable to dispatch IOpusMapper for " + opus.getClass().getName()));
     }
 
-    private ArticleDTO buildArticleDTO(Article article) {
-        return ArticleDTO.builder()
-                .id(article.getId())
-                .title(article.getTitle())
-                .publicationDate(article.getPublicationDate())
-                .periodicalName(article.getPeriodicalName())
-                .build();
+    @Component
+    private static class BookMapper implements IOpusMapper {
+
+        @Override
+        public boolean supports(OpusDTO opusDTO) {
+            return BookDTO.class.isAssignableFrom(opusDTO.getClass());
+        }
+
+        @Override
+        public boolean supports(Opus opus) {
+            return Book.class.isAssignableFrom(opus.getClass());
+        }
+
+        @Override
+        public Opus toEntity(OpusDTO opusDTO) {
+            var book = cast(opusDTO);
+            return Book.builder()
+                    .id(book.id())
+                    .title(book.title())
+                    .publicationDate(book.publicationDate())
+                    .dedication(book.dedication())
+                    .build();
+        }
+
+        @Override
+        public OpusDTO toDTO(Opus opus) {
+            var book = cast(opus);
+            return BookDTO.builder()
+                    .id(book.getId())
+                    .title(book.getTitle())
+                    .publicationDate(book.getPublicationDate())
+                    .dedication(book.getDedication())
+                    .build();
+        }
+
+        private BookDTO cast(OpusDTO opusDTO) {
+            return (BookDTO) opusDTO;
+        }
+
+        private Book cast(Opus opus) {
+            return (Book) opus;
+        }
+
     }
 
-    private BookDTO buildBookDTO(Book book) {
-        return BookDTO.builder()
-                .id(book.getId())
-                .title(book.getTitle())
-                .publicationDate(book.getPublicationDate())
-                .dedication(book.getDedication())
-                .build();
+    @Component
+    private static class ArticleMapper implements IOpusMapper {
+
+        @Override
+        public boolean supports(OpusDTO opusDTO) {
+            return ArticleDTO.class.isAssignableFrom(opusDTO.getClass());
+        }
+
+        @Override
+        public boolean supports(Opus opus) {
+            return Article.class.isAssignableFrom(opus.getClass());
+        }
+
+        @Override
+        public Opus toEntity(OpusDTO opusDTO) {
+            var article = cast(opusDTO);
+            return Article.builder()
+                    .id(article.id())
+                    .periodicalName(article.periodicalName())
+                    .title(article.title())
+                    .publicationDate(article.publicationDate())
+                    .build();
+        }
+
+        @Override
+        public OpusDTO toDTO(Opus opus) {
+            var article = cast(opus);
+            return ArticleDTO.builder()
+                    .id(article.getId())
+                    .title(article.getTitle())
+                    .publicationDate(article.getPublicationDate())
+                    .periodicalName(article.getPeriodicalName())
+                    .build();
+        }
+
+        private ArticleDTO cast(OpusDTO opusDTO) {
+            return (ArticleDTO) opusDTO;
+        }
+
+        private Article cast(Opus opus) {
+            return (Article) opus;
+        }
+
     }
+
+    private interface IOpusMapper {
+        boolean supports(OpusDTO opusDTO);
+        boolean supports(Opus opus);
+
+        Opus toEntity(OpusDTO opusDTO);
+        OpusDTO toDTO(Opus opus);
+    }
+
 }

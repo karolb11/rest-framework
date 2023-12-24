@@ -34,7 +34,7 @@ class AuthorMapper {
                 .map(localDescriptorMapper::toLocalDescriptorDTO)
                 .toList();
         var opus = Objects.optionalCollection(author::getOpus).stream()
-                .map(opusMapper::toOpusDTO)
+                .map(opusMapper::toDTO)
                 .toList();
         return AuthorDTO.builder()
                 .id(author.getId())

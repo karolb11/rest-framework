@@ -24,7 +24,7 @@ class OpusRegistrationCommandHandler {
         var constraintViolations = validateOpus(authorId, opusDTO);
         if (constraintViolations.isEmpty()) {
             var opus = saveOpus(authorId, opusDTO);
-            return opusMapper.toOpusDTO(opus);
+            return opusMapper.toDTO(opus);
         } else {
             throw new ValidationException(constraintViolations);
         }
@@ -42,7 +42,7 @@ class OpusRegistrationCommandHandler {
     }
 
     private Opus saveOpus(Long authorId, OpusDTO opusDTO) {
-        var opus = opusMapper.toOpus(opusDTO);
+        var opus = opusMapper.toEntity(opusDTO);
         opus = authorFacade.saveOpus(authorId, opus);
 
         log.info("Opus registered, id: {}", opus.getId());
