@@ -1,12 +1,11 @@
-package com.broniec.rest.demo.web.v1;
+package com.broniec.rest.famework.validator;
 
 import java.util.Collection;
 
-import com.broniec.rest.famework.validator.ConstraintViolation;
 import lombok.Getter;
 
 @Getter
-class ValidationException extends Exception {
+public class ValidationException extends Exception {
 
     private final Collection<ConstraintViolation> constraintViolations;
 

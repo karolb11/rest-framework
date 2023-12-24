@@ -1,4 +1,4 @@
-package com.broniec.rest.demo.web.v1;
+package com.broniec.rest.demo.web.v1.opus;
 
 import java.time.LocalDate;
 
@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = BookDTO.class, name = OpusDTO.TYPE_BOOK),
         @JsonSubTypes.Type(value = ArticleDTO.class, name = OpusDTO.TYPE_ARTICLE)
 })
-sealed interface OpusDTO permits ArticleDTO, BookDTO, UnknownOpusDTO {
+public sealed interface OpusDTO permits ArticleDTO, BookDTO, UnknownOpusDTO {
 
     class Fields {
         public static final String id = "id";

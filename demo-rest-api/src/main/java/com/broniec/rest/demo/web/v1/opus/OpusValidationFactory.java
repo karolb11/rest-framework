@@ -1,4 +1,4 @@
-package com.broniec.rest.demo.web.v1;
+package com.broniec.rest.demo.web.v1.opus;
 
 import java.util.List;
 

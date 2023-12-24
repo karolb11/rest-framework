@@ -8,6 +8,7 @@ import com.broniec.rest.demo.domain.Author;
 import com.broniec.rest.demo.domain.AuthorFacade;
 import com.broniec.rest.famework.validator.ConstraintViolation;
 import com.broniec.rest.famework.validator.ValidationContext;
+import com.broniec.rest.famework.validator.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

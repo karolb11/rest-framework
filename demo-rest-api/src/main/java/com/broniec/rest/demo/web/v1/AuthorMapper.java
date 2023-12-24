@@ -3,6 +3,7 @@ package com.broniec.rest.demo.web.v1;
 import org.springframework.stereotype.Component;
 
 import com.broniec.rest.demo.domain.Author;
+import com.broniec.rest.demo.web.v1.opus.OpusMapper;
 import com.broniec.rest.famework.Objects;
 import lombok.RequiredArgsConstructor;
 

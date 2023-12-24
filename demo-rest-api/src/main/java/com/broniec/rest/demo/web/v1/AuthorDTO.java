@@ -3,6 +3,7 @@ package com.broniec.rest.demo.web.v1;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.broniec.rest.demo.web.v1.opus.OpusDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;

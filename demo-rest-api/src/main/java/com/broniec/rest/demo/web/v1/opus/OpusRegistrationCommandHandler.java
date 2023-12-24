@@ -1,4 +1,4 @@
-package com.broniec.rest.demo.web.v1;
+package com.broniec.rest.demo.web.v1.opus;
 
 import java.util.Collection;
 
@@ -8,13 +8,14 @@ import com.broniec.rest.demo.domain.AuthorFacade;
 import com.broniec.rest.demo.domain.Opus;
 import com.broniec.rest.famework.validator.ConstraintViolation;
 import com.broniec.rest.famework.validator.ValidationContext;
+import com.broniec.rest.famework.validator.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-class OpusRegistrationCommandHandler {
+public class OpusRegistrationCommandHandler {
 
     private final AuthorFacade authorFacade;
     private final OpusMapper opusMapper;

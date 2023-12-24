@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.broniec.rest.demo.web.v1.opus.OpusDTO;
+import com.broniec.rest.demo.web.v1.opus.OpusRegistrationCommandHandler;
+import com.broniec.rest.famework.validator.ValidationException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
