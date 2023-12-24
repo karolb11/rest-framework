@@ -25,6 +25,7 @@ class OpusMapper {
                 .id(book.id())
                 .title(book.title())
                 .publicationDate(book.publicationDate())
+                .dedication(book.dedication())
                 .build();
     }
 
@@ -59,6 +60,7 @@ class OpusMapper {
                 .id(book.getId())
                 .title(book.getTitle())
                 .publicationDate(book.getPublicationDate())
+                .dedication(book.getDedication())
                 .build();
     }
 }

@@ -11,6 +11,7 @@ import lombok.experimental.FieldNameConstants;
 record BookDTO(
         Long id,
         String title,
-        LocalDate publicationDate
+        LocalDate publicationDate,
+        String dedication
 ) implements OpusDTO {
 }

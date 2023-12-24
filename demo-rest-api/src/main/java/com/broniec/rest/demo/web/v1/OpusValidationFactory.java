@@ -40,7 +40,7 @@ class OpusValidationFactory {
         var config = new ValidationConfig<BookDTO>();
 
         config.addSuperclassValidation(buildOpusValidationConfig());
-        //for a now has only inherited fields
+        config.addRules(dedicationConstraints());
 
         return new Validator<>(config);
     }
@@ -83,6 +83,12 @@ class OpusValidationFactory {
         return dateValidation(OpusDTO::publicationDate, OpusDTO.Fields.publicationDate)
                 .mandatory()
                 .mustBePast(timeService::currentDate);
+    }
+
+    private static StringFieldConstraints<BookDTO> dedicationConstraints() {
+        return stringValidation(BookDTO::dedication, BookDTO.Fields.dedication)
+                .minLength(3)
+                .maxLength(2000);
     }
 
     private boolean hasDuplicates(OpusDTO opusDTO, ValidationContext context) {

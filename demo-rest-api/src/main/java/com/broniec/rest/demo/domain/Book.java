@@ -10,4 +10,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 public final class Book extends Opus {
+
+    private String dedication;
+
 }
