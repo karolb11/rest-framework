@@ -17,8 +17,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.With;
 
 @jakarta.persistence.Entity
+@With
 @Getter
 @Builder
 @NoArgsConstructor

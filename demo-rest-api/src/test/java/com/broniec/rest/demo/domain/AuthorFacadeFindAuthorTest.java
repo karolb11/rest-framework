@@ -9,7 +9,7 @@ import jakarta.transaction.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class AuthorFacadeSaveAuthorTest extends UnitTest {
+class AuthorFacadeFindAuthorTest extends UnitTest {
 
     @Autowired
     private AuthorFacade authorFacade;
@@ -19,13 +19,14 @@ class AuthorFacadeSaveAuthorTest extends UnitTest {
 
     @Test
     @Transactional
-    public void shouldSaveAuthor() {
+    public void shouldFindAuthorById() {
         //given
         var authorToBeRegistered = authorTestUtils.buildValidRandomAuthor();
-        //when
         var savedAuthor = authorFacade.saveAuthor(authorToBeRegistered);
+        //when
+        var foundAuthor = authorFacade.findAuthor(savedAuthor.getId());
         //then
-        assertThat(savedAuthor.getId()).isNotNull();
+        assertThat(foundAuthor).isNotEmpty();
     }
 
 

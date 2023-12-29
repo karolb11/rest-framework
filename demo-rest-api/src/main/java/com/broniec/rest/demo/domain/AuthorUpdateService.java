@@ -12,10 +12,10 @@ class AuthorUpdateService {
     private final AuthorRepository authorRepository;
 
     @Transactional
-    public Author updateAuthor(Long authorId, Author newAuthor) {
+    public Author updateAuthor(Long authorId, Author updateReference) {
         var authorToBeUpdated = authorRepository.findById(authorId)
                 .orElseThrow(() -> DomainException.authorNotFound(authorId));
-        authorToBeUpdated.update(newAuthor);
+        authorToBeUpdated.update(updateReference);
         return authorToBeUpdated;
     }
 }

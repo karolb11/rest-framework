@@ -1,9 +1,8 @@
 package com.broniec.rest.demo.domain;
 
 import java.time.LocalDate;
+import java.util.Set;
 
-import org.assertj.core.util.Sets;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,9 +10,12 @@ import com.broniec.rest.demo.UnitTest;
 import jakarta.transaction.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.not;
 
 
 class AuthorFacadeUpdateAuthorTest extends UnitTest {
@@ -21,97 +23,134 @@ class AuthorFacadeUpdateAuthorTest extends UnitTest {
     @Autowired
     private AuthorFacade authorFacade;
 
+    @Autowired
+    private AuthorTestUtils authorTestUtils;
+
     @Test
     @Transactional
-    public void shouldUpdateAuthorAndDescriptor() {
+    public void shouldUpdateFirstName() {
         //given
-        var authorToBeRegistered = Author.builder()
-                .firstName("Henryk")
-                .lastName("Sienkiewicz")
-                .dateOfBirth(LocalDate.of(1990, 10, 5))
-                .localDescriptor(Sets.newLinkedHashSet(
-                        LocalDescriptor.builder()
-                                .localIdentifier("auth1")
-                                .sourceSystem("open-library")
-                                .build()
-                ))
-                .build();
-        var savedAuthor = authorFacade.saveAuthor(authorToBeRegistered);
-        var savedAuthorId = savedAuthor.getId();
-        var savedDescriptorId = savedAuthor.getLocalDescriptor().stream().map(LocalDescriptor::getId).findAny().get();
-        var updateReference = Author.builder()
-                .firstName("Henryk2")
-                .lastName("Sienkiewicz2")
-                .dateOfBirth(LocalDate.of(1900, 10, 5))
-                .dateOfDeath(LocalDate.of(1990, 10, 5))
-                .localDescriptor(Sets.newLinkedHashSet(
-                        LocalDescriptor.builder()
-                                .id(savedDescriptorId)
-                                .localIdentifier("auth2")
-                                .sourceSystem("open-library")
-                                .build()
-                ))
-                .build();
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var updateReference = registeredAuthor.withFirstName("newFirstName");
         //when
-        authorFacade.updateAuthor(savedAuthorId, updateReference);
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
         //then
-        var updatedAuthor = authorFacade.findAuthor(savedAuthorId).get();
-        assertThat(updatedAuthor.getFirstName(), Matchers.equalTo(updateReference.getFirstName()));
-        assertThat(updatedAuthor.getLastName(), Matchers.equalTo(updateReference.getLastName()));
-        assertThat(updatedAuthor.getDateOfBirth(), Matchers.equalTo(updateReference.getDateOfBirth()));
-        assertThat(updatedAuthor.getDateOfDeath(), Matchers.equalTo(updateReference.getDateOfDeath()));
-        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasSize(1));
-        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasItem(Matchers.allOf(
-                hasProperty("id", is(savedDescriptorId)),
-                hasProperty("sourceSystem", is("open-library")),
-                hasProperty("localIdentifier", is("auth2"))
-        )));
+        assertThat(updatedAuthor.getFirstName(), is("newFirstName"));
     }
 
     @Test
     @Transactional
-    public void shouldUpdateAuthorAndCreateNewDescriptor() {
+    public void shouldUpdateLastName() {
         //given
-        var authorToBeRegistered = Author.builder()
-                .firstName("Henryk")
-                .lastName("Sienkiewicz")
-                .dateOfBirth(LocalDate.of(1990, 10, 5))
-                .localDescriptor(Sets.newLinkedHashSet(
-                        LocalDescriptor.builder()
-                                .localIdentifier("auth1")
-                                .sourceSystem("open-library")
-                                .build()
-                ))
-                .build();
-        var savedAuthor = authorFacade.saveAuthor(authorToBeRegistered);
-        var savedAuthorId = savedAuthor.getId();
-        var savedDescriptorId = savedAuthor.getLocalDescriptor().stream().map(LocalDescriptor::getId).findAny().get();
-        var updateReference = Author.builder()
-                .firstName("Henryk2")
-                .lastName("Sienkiewicz2")
-                .dateOfBirth(LocalDate.of(1900, 10, 5))
-                .dateOfDeath(LocalDate.of(1990, 10, 5))
-                .localDescriptor(Sets.newLinkedHashSet(
-                        LocalDescriptor.builder()
-                                .localIdentifier("auth2")
-                                .sourceSystem("open-library")
-                                .build()
-                ))
-                .build();
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var updateReference = registeredAuthor.withLastName("newLastName");
         //when
-        authorFacade.updateAuthor(savedAuthorId, updateReference);
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
         //then
-        var updatedAuthor = authorFacade.findAuthor(savedAuthorId).get();
-        assertThat(updatedAuthor.getFirstName(), Matchers.equalTo(updateReference.getFirstName()));
-        assertThat(updatedAuthor.getLastName(), Matchers.equalTo(updateReference.getLastName()));
-        assertThat(updatedAuthor.getDateOfBirth(), Matchers.equalTo(updateReference.getDateOfBirth()));
-        assertThat(updatedAuthor.getDateOfDeath(), Matchers.equalTo(updateReference.getDateOfDeath()));
-        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasSize(1));
-        assertThat(updatedAuthor.getLocalDescriptor(), Matchers.hasItem(Matchers.allOf(
-                hasProperty("id", not(savedDescriptorId)),
-                hasProperty("sourceSystem", is("open-library")),
-                hasProperty("localIdentifier", is("auth2"))
-        )));
+        assertThat(updatedAuthor.getLastName(), is("newLastName"));
     }
+
+    @Test
+    @Transactional
+    public void shouldUpdateDateOfBirth() {
+        //given
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var updateReference = registeredAuthor.withDateOfBirth(LocalDate.of(1911, 1, 1));
+        //when
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
+        //then
+        assertThat(updatedAuthor.getDateOfBirth(), is(LocalDate.of(1911, 1, 1)));
+    }
+
+    @Test
+    @Transactional
+    public void shouldUpdateDateOfDeath() {
+        //given
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var updateReference = registeredAuthor.withDateOfDeath(LocalDate.of(2000, 1, 1));
+        //when
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
+        //then
+        assertThat(updatedAuthor.getDateOfDeath(), is(LocalDate.of(2000, 1, 1)));
+    }
+
+    @Test
+    @Transactional
+    public void shouldUpdateLocalDescriptor() {
+        //given
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var registeredDescriptor = registeredAuthor.getLocalDescriptor().stream().findAny().get();
+        var updateReference = registeredAuthor.withLocalDescriptor(
+                Set.of(
+                        LocalDescriptor.builder()
+                                .id(registeredAuthor.getId())
+                                .localIdentifier("123-abcd")
+                                .sourceSystem("data-source-1")
+                                .build()
+                )
+        );
+        //when
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
+        //then
+        assertThat(updatedAuthor.getLocalDescriptor(), hasSize(1));
+        assertThat(updatedAuthor.getLocalDescriptor(), hasItem(allOf(
+                        hasProperty("id", is(registeredDescriptor.getId())),
+                        hasProperty("localIdentifier", is("123-abcd")),
+                        hasProperty("sourceSystem", is("data-source-1")))
+                )
+        );
+    }
+
+    @Test
+    @Transactional
+    public void shouldReplaceLocalDescriptorDueToEmptyId() {
+        //given
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var registeredDescriptor = registeredAuthor.getLocalDescriptor().stream().findAny().get();
+        var updateReference = registeredAuthor.withLocalDescriptor(
+                Set.of(
+                        LocalDescriptor.builder()
+                                .id(null) // null id, so new LD entity will be saved
+                                .localIdentifier("123-abcd")
+                                .sourceSystem("data-source-1")
+                                .build()
+                )
+        );
+        //when
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
+        //then
+        assertThat(updatedAuthor.getLocalDescriptor(), hasSize(1));
+        assertThat(updatedAuthor.getLocalDescriptor(), hasItem(hasProperty("id", not(registeredDescriptor.getId()))));
+    }
+
+    @Test
+    @Transactional
+    public void shouldReplaceLocalDescriptorDueToInvalidId() {
+        //given
+        var author = authorTestUtils.buildValidRandomAuthor();
+        var registeredAuthor = authorFacade.saveAuthor(author);
+        var registeredDescriptor = registeredAuthor.getLocalDescriptor().stream().findAny().get();
+        var updateReference = registeredAuthor.withLocalDescriptor(
+                Set.of(
+                        LocalDescriptor.builder()
+                                .id(Long.MAX_VALUE) // invalid id, so new LD entity will be saved
+                                .localIdentifier("123-abcd")
+                                .sourceSystem("data-source-1")
+                                .build()
+                )
+        );
+        //when
+        var updatedAuthor = authorFacade.updateAuthor(registeredAuthor.getId(), updateReference);
+        //then
+        assertThat(updatedAuthor.getLocalDescriptor(), hasSize(1));
+        assertThat(updatedAuthor.getLocalDescriptor(), hasItem(hasProperty("id", not(registeredDescriptor.getId()))));
+    }
+
 
 }
