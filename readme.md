@@ -301,6 +301,6 @@ public StringFieldConstraints<O> startsWithCapital() {
     }
 ```
 
-Please note that this extension of StringFieldConstraints required no code modifications. 
+Please note that this extension of **StringFieldConstraints** required no code modifications. 
 All that has been done is extending the Validation Framework with new code, 
 which aligns well with the open-closed principle of SOLID.
