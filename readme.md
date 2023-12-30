@@ -17,16 +17,16 @@ Resource validation includes checks for mandatory properties, certain constraint
 
 ### Author registration and update
 Provide an endpoint that facilitates author registration.
-The Author entity possesses properties such as id, first name, last name, date of birth, and more. <br>
-Additionally, it includes a collection of local descriptors.
-A Local Descriptor is an entity with two attributes: **local identifier** and **data source.**
-This entity is designed to establish links between the Author entity and its various representations in third-party systems.<br>
-Each author must be unique across the system based on their **firstName** and **lastName** attributes combination.<br>
+The **Author** entity possesses properties such as **id**, **first name**, **last name**, **date of birth**, and more. <br>
+Additionally, it includes a collection of **local descriptors**.
+A **Local Descriptor** is an entity with two attributes: **local identifier** and **data source.**
+This entity is designed to establish links between the **Author** entity and its various representations in third-party systems.<br>
+Each **author** must be unique across the system based on their **firstName** and **lastName** attributes combination.<br>
 It is also necessary to implement an endpoint that enables the comprehensive updating of author details,
-encompassing both basic attributes and local descriptors.
-An important consideration in the update procedure is the requirement to preserve the IDs of sub-objects.
-Therefore, when an API user submits a PUT author request and includes the ID of a descriptor that already exists within this author,
-the system must retain the ID of this descriptor and proceed to update its properties.
+encompassing both basic attributes and **local descriptors**.
+An important consideration in the update procedure is the requirement to preserve the **IDs** of sub-objects.
+Therefore, when an API user submits a PUT author request and includes the **ID** of a **descriptor** that already exists within this **author**,
+the system must retain the **ID** of this **descriptor** and proceed to update its properties.
 
 # Solution description
 
@@ -55,9 +55,10 @@ Domain package is a heart of application. It contains entities, repositories and
 It also exposes a Facade to be used by **Web** components.
 
 ## Web
-The **web** package contains subpackages, each representing a specific API version. 
-All classes within this package tree must be package-private. 
-This ensures there are no dependencies between API versions and effectively separates them from the domain. <br>
+The **web** package contains subpackages, each first level subpackage representing a specific API version. 
+Any class in package dedicated for specific api version **must not** depend on any class from package of different api version
+and must not be a dependency of classes from inside domain package.
+ArchUnit tests ensure that those core assumptions are met.<br>
 This separation simplifies the management of API versions:
 - To decommission a deprecated version, just delete the corresponding package.
 - To stage a new version, create a copy of the latest one and increment its version number.
@@ -262,8 +263,8 @@ Fluent API of the class provides handy way of validation criteria configuration.
 But what exactly the **mandatory**, **minLength**, and **maxLength** methods do?
 They add new constraints to the **constraints** collection being an instance variable of the class.
 
-Let's consider what needs to be done when the next validation criterion is required, 
-for example, when the first character in the string must be a capital letter. 
+Let's consider what needs to be done when the next validation criterion is required.
+For example, when the first character in the string must be a capital letter. 
 To meet this requirement, we would have to implement a new **Constraint**, such as **CapitalStartingCharConstraint**, 
 and add a new method to the **StringFieldConstraints** class. 
 The execution of this new method should add the newly created constraint to the **constraints** collection.
