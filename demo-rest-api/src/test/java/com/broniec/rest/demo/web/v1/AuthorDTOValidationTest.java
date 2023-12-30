@@ -39,9 +39,8 @@ class AuthorDTOValidationTest extends UnitTest {
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
-        assertThat(result).containsExactly(
-                new ConstraintViolation("firstName", "Mandatory field")
-        );
+        var expectedViolation = new ConstraintViolation("firstName", "Mandatory field");
+        assertThat(result).containsExactly(expectedViolation);
     }
 
     @Test
@@ -54,9 +53,8 @@ class AuthorDTOValidationTest extends UnitTest {
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
-        assertThat(result).containsExactly(
-                new ConstraintViolation("firstName", "Min length is 3")
-        );
+        var expectedViolation = new ConstraintViolation("firstName", "Min length is 3");
+        assertThat(result).containsExactly(expectedViolation);
     }
 
     @Test
@@ -69,9 +67,8 @@ class AuthorDTOValidationTest extends UnitTest {
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
-        assertThat(result).containsExactly(
-                new ConstraintViolation("firstName", "Max length is 100")
-        );
+        var expectedViolation = new ConstraintViolation("firstName", "Max length is 100");
+        assertThat(result).containsExactly(expectedViolation);
     }
 
     @Test
@@ -84,9 +81,8 @@ class AuthorDTOValidationTest extends UnitTest {
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
-        assertThat(result).containsExactly(
-                new ConstraintViolation("dateOfBirth", "Mandatory field")
-        );
+        var expectedViolation = new ConstraintViolation("dateOfBirth", "Mandatory field");
+        assertThat(result).containsExactly(expectedViolation);
     }
 
     @Test
@@ -100,9 +96,8 @@ class AuthorDTOValidationTest extends UnitTest {
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
-        assertThat(result).containsExactly(
-                new ConstraintViolation("dateOfBirth", "Date must be past")
-        );
+        var expectedViolation = new ConstraintViolation("dateOfBirth", "Date must be past");
+        assertThat(result).containsExactly(expectedViolation);
     }
 
     private AuthorDTO.AuthorDTOBuilder validAuthorDTOBuilder() {
