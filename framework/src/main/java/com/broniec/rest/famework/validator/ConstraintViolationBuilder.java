@@ -18,6 +18,10 @@ class ConstraintViolationBuilder {
         return new ConstraintViolation(fieldLabel, "Invalid type");
     }
 
+    public ConstraintViolation mustStartWithCapitalLetter() {
+        return new ConstraintViolation(fieldLabel, "Must start with capital letter");
+    }
+
     ConstraintViolation notApplicableForCreateRequest() {
         return new ConstraintViolation(fieldLabel, "Not applicable for create request");
     }

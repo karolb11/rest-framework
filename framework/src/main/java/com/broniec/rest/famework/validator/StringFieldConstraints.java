@@ -38,4 +38,9 @@ public class StringFieldConstraints<O> implements ValidationRules<O> {
         return this;
     }
 
+    public StringFieldConstraints<O> startsWithCapital() {
+        constraints.add(new CapitalStartingCharConstraint<>(fieldLabel));
+        return this;
+    }
+
 }

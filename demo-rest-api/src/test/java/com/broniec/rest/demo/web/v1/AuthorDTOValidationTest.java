@@ -48,7 +48,7 @@ class AuthorDTOValidationTest extends UnitTest {
         //given
         var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
-                .firstName("a")
+                .firstName("A")
                 .build();
         //when
         var result = validator.validate(author, ValidationContext.create());
@@ -62,12 +62,26 @@ class AuthorDTOValidationTest extends UnitTest {
         //given
         var validator = authorValidatorFactory.buildAuthorDTOValidator();
         var author = validAuthorDTOBuilder()
-                .firstName(RandomStringUtils.random(500))
+                .firstName("A" + RandomStringUtils.random(500))
                 .build();
         //when
         var result = validator.validate(author, ValidationContext.create());
         //then
         var expectedViolation = new ConstraintViolation("firstName", "Max length is 100");
+        assertThat(result).containsExactly(expectedViolation);
+    }
+
+    @Test
+    void shouldReturnViolationForNonCapitalFirstName() {
+        //given
+        var validator = authorValidatorFactory.buildAuthorDTOValidator();
+        var author = validAuthorDTOBuilder()
+                .firstName("firstName")
+                .build();
+        //when
+        var result = validator.validate(author, ValidationContext.create());
+        //then
+        var expectedViolation = new ConstraintViolation("firstName", "Must start with capital letter");
         assertThat(result).containsExactly(expectedViolation);
     }
 

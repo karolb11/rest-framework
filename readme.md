@@ -159,4 +159,126 @@ Let's take a closer look at the **stringValidation** method. It takes two parame
 
 Further constraints can be configured by invoking public methods on the returned object, such as **mandatory,** **minLength,** and **maxLength**.
 
-### unicityConstraint 
+### unicityConstraint
+
+**UnicityConstraint** method creates a constraint if the processed author is not a duplicate of already existing ones. 
+The method requires a predicate as its argument. 
+The predicate should return true if the author is a duplicate.
+
+```java
+private boolean hasDuplicates(AuthorDTO authorDTO, ValidationContext context) {
+        var collidingAuthor = authorFacade.findAuthor(authorDTO.firstName(), authorDTO.lastName());
+        return switch (context.operationType()) {
+            case CREATE -> collidingAuthor.isPresent();
+            case UPDATE -> collidingAuthor
+                    .map(Author::getId)
+                    .filter(id -> !id.equals(context.updatedAggregateResourceId()))
+                    .isPresent();
+        };
+    }
+```
+
+## Deeper jump into Validation Framework
+Each **ValidationRules** (being added to validation config using **addRules** method) is an interface.
+It has multiple implementations allowing for defining a set of validation rules for specific DTO property.
+The interface declares an **execute** method returning stream of **ConstraintViolations**
+
+```java
+public interface ValidationRules<O> {
+    Stream<ConstraintViolation> execute(O obj, ValidationContext context);
+}
+```
+
+StringFieldConstraints is likely most commonly used implementation of ValidationRules.
+It is dedicated for validation of String-typed properties.
+
+```java
+public class StringFieldConstraints<O> implements ValidationRules<O> {
+
+    private final Function<O, String> valueGetter;
+    private final String fieldLabel;
+    private final Collection<Constraint<O, String>> constraints;
+
+    StringFieldConstraints(Function<O, String> valueGetter, String fieldLabel) {
+        this.valueGetter = valueGetter;
+        this.fieldLabel = fieldLabel;
+        this.constraints = new ArrayList<>();
+    }
+
+    @Override
+    public Stream<ConstraintViolation> execute(O obj, ValidationContext context) {
+        var value = valueGetter.apply(obj);
+        return constraints.stream().flatMap(constraint -> constraint.check(obj, context, value, fieldLabel));
+    }
+
+    public StringFieldConstraints<O> mandatory() {
+        constraints.add(new MandatoryStringConstraint<>(fieldLabel));
+        return this;
+    }
+
+    public StringFieldConstraints<O> minLength(int minLength) {
+        constraints.add(new MinStringLengthConstraint<>(fieldLabel, minLength));
+        return this;
+    }
+
+    public StringFieldConstraints<O> maxLength(int maxLength) {
+        constraints.add(new MaxStringLengthConstraint<>(fieldLabel, maxLength));
+        return this;
+    }
+}
+```
+
+As mentioned earlier, the object constructor requires a function that allows obtaining the value of the validated property 
+and the label, which will be further used to address recognized violations.<br>
+My implementation allows for defining three validation criteria:
+- whether the property is mandatory
+- what is minimal length of the string
+- what is maximal length of the string
+
+### Extension possibilities
+
+Fluent API of the class provides handy way of validation criteria configuration.<br>
+But what exactly the **mandatory**, **minLength**, and **maxLength** methods do?
+They add new constraints to the **constraints** collection being an instance variable of the class.
+
+Let's consider what needs to be done when the next validation criterion is required, 
+for example, when the first character in the string must be a capital letter. 
+To meet this requirement, we would have to implement a new **Constraint**, such as **CapitalStartingCharConstraint**, 
+and add a new method to the **StringFieldConstraints** class. 
+The execution of this new method should add the newly created constraint to the **constraints** collection.
+
+Example implementation of **CapitalStartingCharConstraint**:
+```java
+class CapitalStartingCharConstraint<O> implements Constraint<O, String> {
+
+    private final ConstraintViolationBuilder constraintViolationBuilder;
+
+    CapitalStartingCharConstraint(String fieldLabel) {
+        constraintViolationBuilder = new ConstraintViolationBuilder(fieldLabel);
+    }
+
+    @Override
+    public Stream<ConstraintViolation> check(O validatedObj, ValidationContext context, String value, String fieldLabel) {
+        if (StringUtils.isBlank(value)) {
+            return Stream.empty();
+        } else if (Character.isUpperCase(value.charAt(0))) {
+            return Stream.empty();
+        } else {
+            return constraintViolationBuilder.mustStartWithCapitalLetter();
+        }
+    }
+}
+
+```
+
+New method of **StringFieldConstraints**:
+```java
+public StringFieldConstraints<O> startsWithCapital() {
+        constraints.add(new CapitalStartingCharConstraint<>(fieldLabel));
+        return this;
+    }
+```
+
+Please note that this extension of StringFieldConstraints required no code modifications. 
+All that has been done is extending the Validation Framework with new code, 
+which aligns well with the open-closed principle of SOLID.

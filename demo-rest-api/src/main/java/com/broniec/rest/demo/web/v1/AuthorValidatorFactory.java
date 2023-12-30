@@ -44,6 +44,7 @@ class AuthorValidatorFactory {
 
     private static StringFieldConstraints<AuthorDTO> firstNameConstrants() {
         return stringValidation(AuthorDTO::firstName, AuthorDTO.Fields.firstName)
+                .startsWithCapital()
                 .mandatory()
                 .minLength(3)
                 .maxLength(100);
@@ -51,6 +52,7 @@ class AuthorValidatorFactory {
 
     private static StringFieldConstraints<AuthorDTO> lastNameConstraints() {
         return stringValidation(AuthorDTO::lastName, AuthorDTO.Fields.lastName)
+                .startsWithCapital()
                 .mandatory()
                 .minLength(3)
                 .maxLength(100);
