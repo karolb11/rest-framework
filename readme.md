@@ -211,7 +211,7 @@ public interface ValidationRules<O> {
 }
 ```
 
-StringFieldConstraints is likely most commonly used implementation of ValidationRules.
+**StringFieldConstraints** is likely most commonly used implementation of **ValidationRules**.
 It is dedicated for validation of String-typed properties.
 
 ```java
