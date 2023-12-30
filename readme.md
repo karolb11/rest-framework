@@ -159,6 +159,27 @@ Let's take a closer look at the **stringValidation** method. It takes two parame
 
 Further constraints can be configured by invoking public methods on the returned object, such as **mandatory,** **minLength,** and **maxLength**.
 
+### Validation Factory refactor
+To reduce the size of the **buildAuthorDTOValidator** method,
+we can extract the instantiation and configuration of **ValidationRules** into separate methods. 
+The final structure of the method is as follows:
+```java
+public Validator<AuthorDTO> buildAuthorDTOValidator() {
+        var config = new ValidationConfig<AuthorDTO>();
+
+        config.addRules(identityConstraint(AuthorDTO::id, AuthorDTO.Fields.id));
+        config.addRules(unicityConstraint(this::hasDuplicates));
+
+        config.addRules(firstNameConstrants());
+        config.addRules(lastNameConstraints());
+        config.addRules(dateOfBirthConstraints());
+        config.addRules(dateOfDeathConstraints());
+        config.addRules(localDescriptorConstraints());
+
+        return new Validator<>(config);
+    }
+```
+
 ### unicityConstraint
 
 **UnicityConstraint** method creates a constraint if the processed author is not a duplicate of already existing ones. 
